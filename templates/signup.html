@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Finance Planner - Sign Up</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #0a0a1a 0%, #0f1420 50%, #0a0e1a 100%);
+            min-height: 100vh;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Background glow effects */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 20%;
+            left: 5%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(0, 255, 150, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: 0;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: 20%;
+            right: 10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(0, 100, 255, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(100px);
+            z-index: 0;
+        }
+
+        /* Floating Rupee Icons */
+        .floating-icon {
+            position: fixed;
+            width: 70px;
+            height: 70px;
+            background: rgba(0, 255, 150, 0.08);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: #00ff96;
+            border: 1px solid rgba(0, 255, 150, 0.15);
+            box-shadow:
+                0 8px 32px rgba(0, 255, 150, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            z-index: 1;
+        }
+
+        .floating-icon.top-left {
+            left: 15%;
+            top: 25%;
+            transform: rotate(-20deg);
+        }
+
+        .floating-icon.top-right {
+            right: 18%;
+            top: 20%;
+            transform: rotate(15deg);
+        }
+
+        .floating-icon.bottom-left {
+            left: 12%;
+            bottom: 30%;
+            transform: rotate(10deg);
+            background: rgba(0, 100, 255, 0.08);
+            border: 1px solid rgba(0, 100, 255, 0.15);
+            color: #4d9fff;
+        }
+
+        .floating-chart {
+            position: fixed;
+            right: 12%;
+            bottom: 35%;
+            width: 90px;
+            height: 90px;
+            background: rgba(0, 150, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(0, 150, 255, 0.15);
+            box-shadow:
+                0 8px 32px rgba(0, 150, 255, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            z-index: 1;
+        }
+
+        .floating-chart svg {
+            width: 50px;
+            height: 50px;
+        }
+
+        /* Main Container */
+        .container {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 650px;
+            padding: 20px;
+        }
+
+        /* Glass Card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(40px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 40px 36px;
+            box-shadow:
+                0 25px 50px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        /* Logo Section */
+        .logo-section {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #00ff96 0%, #00cc78 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 12px;
+            color: #0a0a1a;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .page-title {
+            font-size: 26px;
+            font-weight: 700;
+            color: #fff;
+            margin: 0;
+        }
+
+        /* Form Styles */
+        .form-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+            gap: 12px;
+        }
+
+        .form-label {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.9);
+            min-width: 130px;
+            font-weight: 400;
+        }
+
+        .input-wrapper {
+            flex: 1;
+            position: relative;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .form-input:focus {
+            border-color: rgba(0, 255, 150, 0.5);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        /* Phone Input Special */
+        .phone-input-wrapper {
+            display: flex;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .country-code {
+            padding: 12px 14px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .phone-input {
+            flex: 1;
+        }
+
+        /* Password Toggle */
+        .password-toggle {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            font-size: 18px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .password-toggle:hover {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Checkbox */
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0 24px 142px;
+        }
+
+        .checkbox-wrapper input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #00ff96;
+            cursor: pointer;
+        }
+
+        .checkbox-label {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .checkbox-label a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .checkbox-label a:hover {
+            color: #00ff96;
+            border-bottom-color: #00ff96;
+        }
+
+        /* Submit Button */
+        .btn-submit {
+            width: 100%;
+            padding: 14px 24px;
+            background: linear-gradient(135deg, #00cc78 0%, #009e5c 100%);
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 255, 150, 0.3);
+        }
+
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 13px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .divider span {
+            padding: 0 16px;
+        }
+
+        /* Social Buttons */
+        .social-buttons {
+            display: grid;
+            /* grid-template-columns: 1fr 1fr; */
+            margin-bottom: 24px;
+        }
+
+        .btn-social {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-social:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-social svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Login Link */
+        .login-link {
+            text-align: center;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .login-link a {
+            color: #00ff96;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer */
+        .footer {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.4);
+            z-index: 2;
+        }
+
+        .footer-heart {
+            color: #ff6b6b;
+        }
+
+        /* Grok Logo */
+        .grok-logo {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 2;
+        }
+
+        .grok-icon {
+            width: 24px;
+            height: 24px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Elements -->
+    <div class="floating-icon top-left">₹</div>
+    <div class="floating-icon top-right">₹</div>
+    <div class="floating-icon bottom-left">₹</div>
+    <div class="floating-chart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#4d9fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 3v18h18"/>
+            <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/>
+        </svg>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <div class="glass-card">
+            <!-- Logo -->
+            <div class="logo-section">
+                <div class="logo">
+                    <div class="logo-icon">AI</div>
+                    <div class="logo-text">Smart Finance Planner</div>
+                </div>
+                <h1 class="page-title">Create Your Free Account</h1>
+            </div>
+
+            <!-- Form -->
+            <form method="post" action="/signup/">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label class="form-label">UserName</label>
+                    <div class="input-wrapper">
+                        <input type="text" class="form-input" placeholder="Enter your full name" autofocus required name="username">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <div class="input-wrapper">
+                        <input type="email" class="form-input" placeholder="Enter your email" required name="emailadderess">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Phone Number</label>
+                    <div class="phone-input-wrapper">
+                        <span class="country-code">+91</span>
+                        <input type="tel" class="form-input phone-input" required placeholder="Enter phone number" pattern="[0-9]{10}" maxlength="10" name="phonenumber">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Create Password</label>
+                    <div class="input-wrapper">
+                        <input type="password" class="form-input" required placeholder="Create password" name="createpassword">
+                        <!-- <button type="button" class="password-toggle">👁</button> -->
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Confirm Password</label>
+                    <div class="input-wrapper">
+                        <input type="password" class="form-input" required placeholder="Confirm password" name="confirmpassword">
+                        <!-- <button type="button" class="password-toggle">👁</button> -->
+                    </div>
+                </div>
+
+                <!-- <div class="checkbox-wrapper">
+                    <input type="checkbox" id="terms" required>
+                    <label for="terms" class="checkbox-label">
+                        I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+                    </label>
+                </div> -->
+
+                <button type="submit" class="btn-submit">Sign Up Free</button>
+            </form>
+
+            <!-- Divider -->
+            <div class="divider">
+                <span>Or sign up with</span>
+            </div>
+
+            <!-- Social Buttons -->
+            <div class="social-buttons">
+                <a href="/accounts/google/login/">
+                    <button class="btn-social">
+                        <svg viewBox="0 0 24 24">
+                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                        </svg>
+                        Google
+                    </button>
+                </a>
+                <!-- <button class="btn-social">
+                    <svg viewBox="0 0 24 24" fill="#fff">
+                        <path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.06-.4C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.74 1.18 0 2.21-.93 3.81-.93 1.07 0 2.94.46 3.91 2.37-3.52 2.1-2.93 6.98.22 8.13-.57 1.5-1.31 2.99-2.02 4.66zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
+                    </svg>
+                    Apple
+                </button> -->
+            </div>
+
+            <!-- Login Link -->
+            <div class="login-link" >
+                Already have an account? <a href="/loginpage">Login</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer" style="bottom: 5px;">
+        © 2026 Smart Finance Planner • Made with <span class="footer-heart">❤</span> in India
+    </div>
+
+    <!-- Grok Logo -->
+    <div class="grok-logo">
+        <svg class="grok-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+        </svg>
+        Grok
+    </div>
+</body>
+</html>

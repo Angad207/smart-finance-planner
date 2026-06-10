@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+
+{% block title %}First Home{% endblock title %}
+
+{% block css %}
+    
+    <style>
+      .g-3{
+        width: 40%;
+        position: absolute;
+        left: 30%;
+
+      }
+    </style>
+
+    <style>
+      .legend-lebel{
+    max-height: 120px;
+    overflow-y: auto;
+    scrollbar-width: none;
+    
+}
+
+.legend-left{
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    justify-content: space-between;
+}
+
+.color-box{
+    margin: 10px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+    </style>
+{% endblock css %}
+
+{% block body %}<form class="row g-3" method="POST" action="/UI/" id="form">
+    {% csrf_token %}
+  <div class="col-md-6">
+    <label for="inpuFname" class="form-label">First Name</label>
+    <input type="text" class="form-control" id="inpuFname" name="fname">
+  </div>
+  <div class="col-md-6">
+    <label for="inputLname" class="form-label">Last Name</label>
+    <input type="text" class="form-control" id="inputLname" name="lname">
+  </div>
+  <div class="col-md-6">
+    <label for="inputEmail4" class="form-label">Email</label>
+    <input type="email" class="form-control" id="inputEmail4" name="email">
+  </div>
+  <div class="col-md-6">
+    <label for="inputPassword4" class="form-label">Password</label>
+    <input type="password" class="form-control" id="inputPassword4" name="password">
+  </div>
+  <div class="col-12">
+    <label for="inputAddress" class="form-label">Address</label>
+    <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St" name="address1">
+  </div>
+  <div class="col-12">
+    <label for="inputAddress2" class="form-label">Address 2</label>
+    <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor" name="address2">
+  </div>
+  <div class="col-md-6">
+    <label for="inputCity" class="form-label">City</label>
+    <input type="text" class="form-control" id="inputCity" name="city">
+  </div>
+  <div class="col-md-4">
+    <label for="inputState" class="form-label">State</label>
+    <select id="inputState" class="form-select" name="state">
+      <option selected>Choose...</option>
+      <option>...</option>
+    </select>
+  </div>
+  <div class="col-md-2">
+    <label for="inputZip" class="form-label">Zip</label>
+    <input type="text" class="form-control" id="inputZip" name="zip">
+  </div>
+  <div class="col-12">
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="gridCheck" name="check" required>
+      <label class="form-check-label" for="gridCheck">
+        Check me out
+      </label>
+    </div>
+  </div>
+  <div class="col-auto">
+    <button type="submit" class="btn btn-primary" onclick="loaddata()">Register</button>
+  </div>
+
+
+  
+</form>
+<div class="ajax" style="height: 100px; width: 100%; background-color: aqua;top: 500px;position: relative;">
+    <div class="legend-lebel" style="height: 100%; width: 200px;"></div>
+</div>
+
+<script>
+  function id(){
+    fetch('/cpy/')
+    .then(res => res.json())
+    .then(data =>{
+      let xy = data.labels
+      let yx = data.values
+      let barcolors = ["red","green","black","yellow","blue"];
+        
+      const legendcont = document.querySelector(".legend-lebel");
+      legendcont.innerHTML="";
+     //  var xvalues = ["italy", "france", "spain", "usa", 'argentina'];
+  //  var yvalues = [55,49,44,24,15];
+    
+      for(let i = 0; i<xy.length;i++){
+        const x = xy[i];
+        const y = yx[i];
+        const bcolor = barcolors[i];
+          
+        const item = document.createElement("div");
+        item.classList.add("item");
+          
+        item.innerHTML = `
+        <div class="legend-left">
+          <div style="display: flex;">
+            <div class="color-box" style="background:${bcolor}"></div> 
+            <span>${x}</span>
+          </div>
+          <div>₹${y}</div>
+        </div>
+          `;
+        legendcont.appendChild(item);
+       }
+  });
+  }
+
+  id();
+
+  setInterval(id,3000);
+
+
+
+  //  var xvalues = ["italy", "france", "spain", "usa", 'argentina'];
+  // //  var yvalues = [55,49,44,24,15];
+  //  var barcolors = ["red","green","black","yellow","blue"];
+  //  for(let i = 0; i<xy.length;i++){
+  //   const x = xy[i];
+  //   const y = yx[i];
+  //   const bcolor = barcolors[i];
+  //   const legendcont = document.querySelector(".legend-lebel");
+
+  //   const item = document.createElement("div");
+  //   item.classList.add("item");
+
+  //   item.innerHTML = `
+  //   <div class="legend-left">
+  //     <div style="display: flex;">
+  //       <div class="color-box" style="background:${bcolor}"></div> 
+  //       <span>${x}</span>
+  //     </div> 
+  //     <div>₹${y}</div>
+  //   </div>
+  //   `;
+
+  //   legendcont.appendChild(item);
+  //     }
+
+  // function loaddata(){
+  //   // event.preventDefault();
+
+  //   const form= document.getElementById("form");
+  //   const formdata = new FormData(form);
+  //   fetch("/msg/")
+  //   .then(response => response.json())
+  //   .then(data =>{
+  //     document.querySelector(".msg").innerText = data.msg;
+      
+  //   });
+  // }
+</script>
+  {% endblock body %}

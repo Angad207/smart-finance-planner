@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Finance Planner - Verify OTP</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: linear-gradient(135deg, #0A0C14 0%, #111827 100%);
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+    .card {
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(34, 211, 238, 0.2);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+    .input-field {
+      background: #1E2937;
+      border: 1px solid #334155;
+      transition: all 0.3s ease;
+    }
+    .input-field:focus {
+      border-color: #22D3EE;
+      box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.1);
+      outline: none;
+    }
+    .btn-primary {
+      background: linear-gradient(90deg, #22D3EE, #10B981);
+      transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(34, 211, 238, 0.3);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center text-white">
+  
+  <div class="w-full max-w-md mx-auto p-6">
+    <!-- Header -->
+    <div class="flex items-center justify-center mb-8">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-blue-600 rounded-2xl flex items-center justify-center text-2xl font-bold">AI</div>
+        <div>
+          <h1 class="text-2xl font-semibold tracking-tight">Smart Finance Planner</h1>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Card -->
+    <div class="card rounded-3xl p-8 shadow-2xl">
+      <div class="text-center mb-8">
+        <h2 class="text-3xl font-semibold mb-2">Verify OTP</h2>
+        <p class="text-gray-400">Enter the 6-digit OTP sent to your registered email</p>
+      </div>
+
+      <form method="POST" class="space-y-6">
+        {% csrf_token %}
+
+        <!-- OTP Field -->
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">Enter OTP</label>
+          <input 
+            type="text" 
+            name="otp" 
+            maxlength="6"
+            placeholder="Enter 6-digit OTP"
+            required
+            class="input-field w-full px-5 py-4 rounded-2xl text-2xl tracking-widest text-center placeholder-gray-500 focus:ring-2"
+          >
+        </div>
+
+        <!-- Error Message -->
+        {% if error %}
+          <div class="bg-red-500/10 border border-red-500 text-red-400 px-4 py-3 rounded-2xl text-sm text-center">
+            {{ error }}
+          </div>
+        {% endif %}
+
+        <!-- Submit Button -->
+        <button 
+          type="submit"
+          class="btn-primary w-full py-4 rounded-2xl text-lg font-semibold text-black hover:brightness-110"
+        >
+          Verify OTP
+        </button>
+      </form>
+
+      <!-- Footer Links -->
+      <div class="mt-8 flex flex-col items-center gap-4 text-sm">
+        <a href="#" class="text-cyan-400 hover:text-cyan-300 font-medium">
+          Resend OTP
+        </a>
+        <a href="/loginpage" class="text-gray-400 hover:text-gray-300">
+          ← Back to Login
+        </a>
+      </div>
+    </div>
+
+    <!-- Trust Footer -->
+    <div class="text-center mt-8 text-xs text-gray-500">
+      OTP is valid for 10 minutes • Secured with 256-bit SSL
+    </div>
+  </div>
+
+</body>
+</html>

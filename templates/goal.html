@@ -1,0 +1,3215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Finance Planner</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #0f1419 0%, #1a2332 50%, #0f1419 100%);
+            min-height: 100vh;
+            color: #ffffff;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        /* .sidebar {
+            width: 64px;
+            background: rgba(15, 20, 25, 0.8);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
+            gap: 8px;
+        }
+
+        .sidebar-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #6b7280;
+        }
+
+        .sidebar-icon:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+        }
+
+        .sidebar-icon.active {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+
+        .sidebar-icon svg {
+            width: 20px;
+            height: 20px;
+        } */
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .ai-badge {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .app-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .dropdown-arrow {
+            color: #6b7280;
+            font-size: 12px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .user-greeting {
+            text-align: right;
+        }
+
+        .user-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .star-icon {
+            color: #fbbf24;
+            font-size: 12px;
+        }
+
+        .user-location {
+            font-size: 12px;
+            color: #6b7280;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .date-display {
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            gap: 8px;
+            padding: 0 24px;
+            margin-top: 16px;
+        }
+
+        .nav-tab {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #9ca3af;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .nav-tab:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-tab.active {
+            color: #10b981;
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        /* Content Area */
+        .content {
+            padding: 24px;
+            flex: 1;
+        }
+
+        /* Section Header */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .add-btn {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s;
+        }
+
+        .add-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        /* Filter Tabs */
+        .filter-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .filter-tab {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #9ca3af;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+        }
+
+        .filter-tab:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .filter-tab.active {
+            color: #ffffff;
+            background: rgba(16, 185, 129, 0.2);
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        /* Main Grid Layout */
+        .main-grid {
+            display: grid;
+            /* grid-template-columns: 1fr 320px; */
+            gap: 24px;
+        }
+
+        .goals-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .goals-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        /* Goal Card */
+        .goal-card {
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .goal-card.highlighted {
+            background: linear-gradient(145deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.1) 100%);
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .goal-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        }
+
+        .goal-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+
+        .goal-amount {
+            font-size: 13px;
+            color: #9ca3af;
+            margin-bottom: 12px;
+        }
+
+        .goal-amount .current {
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .goal-percentage {
+            font-size: 32px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 12px;
+        }
+
+        .goal-target {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 4px;
+        }
+
+        .goal-monthly {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 8px;
+        }
+
+        .goal-monthly .amount {
+            color: #60a5fa;
+            font-weight: 600;
+        }
+
+        .goal-status {
+            font-size: 12px;
+            font-weight: 500;
+            padding: 4px 10px;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        .goal-status.on-track {
+            color: #60a5fa;
+            background: rgba(96, 165, 250, 0.1);
+        }
+
+        .goal-status.early {
+            color: #34d399;
+            background: rgba(52, 211, 153, 0.1);
+        }
+
+        .goal-status.great {
+            color: #a78bfa;
+            background: rgba(167, 139, 250, 0.1);
+        }
+
+        /* Bottom Row with Chart */
+        .bottom-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .goal-card-with-chart {
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .new-badge {
+            background: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .chart-container {
+            height: 100px;
+            position: relative;
+            margin-top: 8px;
+        }
+
+        /* Right Sidebar */
+        .right-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .sidebar-card {
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .sidebar-card-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .check-icon {
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+        }
+
+        .sidebar-card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .simulator-question {
+            font-size: 13px;
+            color: #9ca3af;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .simulator-chart {
+            height: 140px;
+            position: relative;
+        }
+
+        .simulator-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 11px;
+            color: #6b7280;
+        }
+
+        .coach-text {
+            font-size: 13px;
+            color: #9ca3af;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .coach-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            padding: 10px 26px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .coach-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        /* Custom Chart Styling */
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 12px;
+            height: 100%;
+            padding: 0 10px;
+        }
+
+        .bar-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .bar {
+            width: 24px;
+            border-radius: 4px 4px 0 0;
+            position: relative;
+        }
+
+        .bar.primary {
+            background: linear-gradient(180deg, #34d399 0%, #059669 100%);
+        }
+
+        .bar.secondary {
+            background: linear-gradient(180deg, #4b5563 0%, #374151 100%);
+        }
+
+        .bar-value {
+            font-size: 10px;
+            color: #34d399;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .bar-label {
+            font-size: 10px;
+            color: #6b7280;
+        }
+
+        /* Area Chart Simulation */
+        .area-chart {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .area-chart-svg {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+
+    <style>
+    .header {
+    display: flex;
+    justify-content: space-between;
+    
+    margin-top: 25px;
+    height: 25px;
+    align-items: center;
+    margin-left: 15px;
+}
+
+.user-info span {
+    margin-left: 15px;
+    color: #aaa;
+}
+.ai-badge {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    color: white;
+    padding: 10px 10px;
+    border-radius: 50%;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+        }
+.dropdown-arrow {
+    color: #6b7280;
+    font-size: 12px;
+        }
+
+.headercss{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  gap: 10px;
+}
+    </style>
+
+</head>
+<body>
+
+
+
+    <div class="container">
+        <!-- Sidebar -->
+        
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <div class="headercss" onclick="bmodal()">
+                    <!-- <span class="ai-badge">SFP</span>        -->
+                    <h3>Smart Finance Planner</h3>
+                    <span class="dropdown-arrow">▼</span>
+                </div>
+                <div class="user-info">
+                    <span id="modal" onclick="bmodal()">Hi  ⭐</span>
+                    <span id="modaldate8">____</span>
+                </div>
+            </div>
+
+            <!-- Navigation Tabs -->
+            <div style="display: flex; justify-content: space-between; padding-right: 24px;">
+                <div class="nav-tabs">
+                    <div class="nav-tab"><a href="/UI" style="text-decoration: none;color: white;">Dashboard</a></div>
+                    <div class="nav-tab"><a href="/budget" style="text-decoration: none;color: white;">Budget</a></div>
+                    <div class="nav-tab active"><a href="/goalpage" style="text-decoration: none;color: white;">Goals</a></div>
+                    <div class="nav-tab"><a href="/report" style="text-decoration: none;color: white;">Reports</a></div>
+                    <div class="nav-tab"><a href="/ai_insights" style="text-decoration: none;color: white;">AI Insights</a></div>
+                </div>
+                <div><button type="button" class="coach-btn" onclick="aigoal()" style="margin-top: 20px;">AI Goal Coach</button></div>
+            </div>
+
+            <!-- Content -->
+            <div class="content">
+                <!-- Section Header -->
+                <div class="section-header">
+                    <h1 class="section-title">Your Financial Goals</h1>
+                    <button type="button" class="add-btn">
+                        <span>+</span>
+                        <span>Add New Goal</span>
+                    </button>
+                </div>
+
+                <!-- Filter Tabs -->
+                <div class="filter-tabs">
+                    <div class="filter-tab active" onclick="viewallGoal()">All</div>
+                    <div class="filter-tab" onclick="inprogressGoal()">In Progress</div>
+                    <div class="filter-tab" onclick="completedGoal()">Completed</div>
+                </div>
+
+                <!-- Main Grid -->
+                <div class="main-grid">
+                    <!-- Goals Section -->
+                    <div class="goals-section">
+                        <!-- Bottom Row with Charts -->
+                        <div class="bottom-row">
+                            <div class="goal-card-with-chart">
+                                <div class="chart-header">
+                                    <div>
+                                        <div class="goal-title">Europe Trip Now</div>
+                                        <div class="goal-amount">
+                                            <span class="current">₹18,50,000</span> / ₹4,00,000
+                                        </div>
+                                        <div class="goal-percentage">31%</div>
+                                        <div class="goal-target">Target: Apr 2045</div>
+                                        <div class="goal-monthly">
+                                            Monthly needed: <span class="amount">₹28,000</span>
+                                        </div>
+                                    </div>
+                                    <span class="new-badge">New</span>
+                                </div>
+                                <!-- <div class="chart-container">
+                                    <svg class="area-chart-svg" viewBox="0 0 300 80" preserveAspectRatio="none">
+                                        <defs>
+                                            <linearGradient id="areaGradient1" x1="0%" y1="0%" x2="0%" y2="100%">
+                                                <stop offset="0%" style="stop-color:#34d399;stop-opacity:0.3" />
+                                                <stop offset="100%" style="stop-color:#34d399;stop-opacity:0" />
+                                            </linearGradient>
+                                        </defs>
+                                        <path d="M0,60 Q30,55 60,50 T120,45 T180,50 T240,35 T300,40 L300,80 L0,80 Z" fill="url(#areaGradient1)"/>
+                                        <path d="M0,60 Q30,55 60,50 T120,45 T180,50 T240,35 T300,40" fill="none" stroke="#34d399" stroke-width="2"/>
+                                        <circle cx="150" cy="45" r="3" fill="#fff"/>
+                                        <text x="155" y="35" fill="#34d399" font-size="10">+49</text>
+                                    </svg>
+                                </div> -->
+                            </div>
+
+                            <div class="goal-card-with-chart">
+                                <div class="chart-header">
+                                    <div>
+                                        <div class="goal-title">Europe Trip 2027</div>
+                                        <div class="goal-amount">
+                                            <span class="current">₹1,80,000</span> / ₹4,00,000
+                                        </div>
+                                        <div class="goal-percentage">45%</div>
+                                        <div class="goal-target">Target: Jun 2027</div>
+                                    </div>
+                                    <span class="new-badge">New</span>
+                                </div>
+                                <div class="chart-container">
+                                    <svg class="area-chart-svg" viewBox="0 0 300 80" preserveAspectRatio="none">
+                                        <defs>
+                                            <linearGradient id="areaGradient2" x1="0%" y1="0%" x2="0%" y2="100%">
+                                                <stop offset="0%" style="stop-color:#34d399;stop-opacity:0.3" />
+                                                <stop offset="100%" style="stop-color:#34d399;stop-opacity:0" />
+                                            </linearGradient>
+                                        </defs>
+                                        <path d="M0,50 Q50,45 100,40 T200,35 T300,30 L300,80 L0,80 Z" fill="url(#areaGradient2)"/>
+                                        <path d="M0,50 Q50,45 100,40 T200,35 T300,30" fill="none" stroke="#34d399" stroke-width="2"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="goal-card-with-chart">
+                                <div class="chart-header">
+                                    <div>
+                                        <div class="goal-title">Europe Trip 2027</div>
+                                        <div class="goal-amount">
+                                            <span class="current">₹1,80,000</span> / ₹4,00,000
+                                        </div>
+                                        <div class="goal-percentage">45%</div>
+                                        <div class="goal-target">Target: Jun 2027</div>
+                                    </div>
+                                    <span class="new-badge">New</span>
+                                </div>
+                                <div class="chart-container">
+                                    <svg class="area-chart-svg" viewBox="0 0 300 80" preserveAspectRatio="none">
+                                        <defs>
+                                            <linearGradient id="areaGradient2" x1="0%" y1="0%" x2="0%" y2="100%">
+                                                <stop offset="0%" style="stop-color:#34d399;stop-opacity:0.3" />
+                                                <stop offset="100%" style="stop-color:#34d399;stop-opacity:0" />
+                                            </linearGradient>
+                                        </defs>
+                                        <path d="M0,50 Q50,45 100,40 T200,35 T300,30 L300,80 L0,80 Z" fill="url(#areaGradient2)"/>
+                                        <path d="M0,50 Q50,45 100,40 T200,35 T300,30" fill="none" stroke="#34d399" stroke-width="2"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Top Row -->
+                        <div class="goals-row">
+                            <div class="goal-card">
+                                <div class="goal-title">Emergency Fund</div>
+                                <div class="goal-amount">
+                                    <span class="current">₹3,25,000</span> / ₹5,00,000
+                                </div>
+                                <div class="goal-percentage">65%</div>
+                                <div class="goal-target">Target: Jun 2026</div>
+                                <div class="goal-monthly">
+                                    Monthly needed: <span class="amount">₹15,000</span>
+                                </div>
+                                <span class="goal-status on-track">On track +3 weeks ahead</span>
+                            </div>
+
+                            <div class="goal-card highlighted">
+                                <div class="goal-title">Home Downpayment</div>
+                                <div class="goal-amount">
+                                    <span class="current">₹12,40,000</span> / ₹25,00,000
+                                </div>
+                                <div class="goal-percentage">50%</div>
+                                <div class="goal-target">Target: Dec 2027</div>
+                                <div class="goal-monthly">
+                                    Monthly needed: <span class="amount">₹65,000</span>
+                                </div>
+                                <span class="goal-status early">+3 months early possible</span>
+                            </div>
+
+                            <div class="goal-card">
+                                <div class="goal-title">Retirement by 2045</div>
+                                <div class="goal-amount">
+                                    <span class="current">₹12,50,000</span> / ₹60,00,000
+                                </div>
+                                <div class="goal-percentage">31%</div>
+                                <div class="goal-target">Target: Jun 2045</div>
+                                <div class="goal-monthly">
+                                    Monthly needed: <span class="amount">₹25,000</span>
+                                </div>
+                                <span class="goal-status great">Great progress!</span>
+                            </div>
+
+                            <div class="goal-card">
+                                <div class="goal-title">Retirement by 2045</div>
+                                <div class="goal-amount">
+                                    <span class="current">₹12,50,000</span> / ₹60,00,000
+                                </div>
+                                <div class="goal-percentage">31%</div>
+                                <div class="goal-target">Target: Jun 2045</div>
+                                <div class="goal-monthly">
+                                    Monthly needed: <span class="amount">₹25,000</span>
+                                </div>
+                                <span class="goal-status great">Great progress!</span>
+                            </div>
+                        </div>
+                        
+                    </div>
+
+                    <!-- Right Sidebar -->
+                    <!-- <div class="right-sidebar">
+                        Goal Simulator -->
+                        <!-- <div class="sidebar-card">
+                            <div class="sidebar-card-header">
+                                <div class="check-icon">✓</div>
+                                <span class="sidebar-card-title">Goal Simulator</span>
+                            </div>
+                            <div class="simulator-question">
+                                What if I increase savings by ₹10k/month?
+                            </div>
+                            <div class="simulator-chart">
+                                <div class="bar-chart">
+                                    <div class="bar-group">
+                                        <div class="bar-value">₹30m</div>
+                                        <div class="bar primary" style="height: 120px;"></div>
+                                        <div class="bar secondary" style="height: 80px;"></div>
+                                        <div class="bar-label">80 cm</div>
+                                    </div>
+                                    <div class="bar-group">
+                                        <div class="bar primary" style="height: 90px;"></div>
+                                        <div class="bar secondary" style="height: 110px;"></div>
+                                        <div class="bar-label">₹300m</div>
+                                    </div>
+                                    <div class="bar-group">
+                                        <div class="bar primary" style="height: 100px;"></div>
+                                        <div class="bar secondary" style="height: 95px;"></div>
+                                        <div class="bar-label">₹600 cm</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
+
+                        <!-- AI Goal Coach -->
+                        <!-- <div class="sidebar-card">
+                            <div class="sidebar-card-header">
+                                <div class="check-icon">✓</div>
+                                <span class="sidebar-card-title">AI Goal Coach</span>
+                            </div>
+                            <div class="coach-text">
+                                You prioritize home goal goal h's mom on youe on fto your shitongont on the goal.
+                            </div>
+                            <button class="coach-btn">AI Goal Coach</button>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        <!-- </div> -->
+
+         <style>
+.modalunique{
+  width:22rem;
+  border-radius:1.5rem;
+  padding:1.5rem;
+  backdrop-filter:blur(1rem);
+  background:rgba(255,255,255,0.08);
+  box-shadow:0 0 2rem rgba(0,0,0,0.6);
+  color:#fff;
+  position:fixed;
+  display: none;
+  left: calc(50vw - 11rem);
+  top: 50px;
+}
+
+.close-icon{
+  position:absolute;
+  top:1rem;
+  right:1rem;
+  font-size:1.5rem;
+  color:#4ade80;
+  cursor:pointer;
+}
+
+.profile{
+  text-align:center;
+  margin-top:1rem;
+}
+
+.profile img{
+  width:6rem;
+  height:6rem;
+  border-radius:50%;
+  object-fit:cover;
+  border:0.2rem solid rgba(255,255,255,0.2);
+}
+
+.name{
+  margin-top:1rem;
+  font-size:1.4rem;
+  font-weight:600;
+}
+
+.email{
+  font-size:0.9rem;
+  opacity:0.7;
+}
+
+.location{
+  font-size:0.85rem;
+  opacity:0.6;
+  margin-top:0.3rem;
+}
+
+.btn{
+  margin-top:1rem;
+  width:100%;
+  padding:0.6rem;
+  border-radius:0.6rem;
+  background:rgba(255,255,255,0.1);
+  border:0.05rem solid rgba(255,255,255,0.2);
+  color:#fff;
+  cursor:pointer;
+}
+
+.menu{
+  margin-top:1rem;
+}
+
+.menu-item{
+  display:flex;
+  align-items:center;
+  gap:0.8rem;
+  padding:0.7rem 0;
+  font-size:0.95rem;
+  cursor:pointer;
+  opacity:0.85;
+}
+
+.menu-item:hover{
+  opacity:1;
+}
+
+.logout{
+  color:#f87171;
+}
+
+.close-btn{
+  margin-top:1.5rem;
+  width:100%;
+  padding:0.7rem;
+  border:none;
+  border-radius:0.7rem;
+  background:#ea1e3c;
+  color:#fff;
+  font-size:1rem;
+  cursor:pointer;
+}
+        </style>
+        <div class="modalunique">
+            <div class="close-icon" onclick="amodal()">✕</div>
+
+            <div class="profile">
+                <img id="prifile-pic" alt="profile">
+                <div class="name">Angad Sharma</div>
+                <div class="email">angad.sharma@example.com</div>
+                <!-- <div class="location">📍 Pune, Maharashtra</div> -->
+            </div>
+
+            <button type="button" class="btn"></button>
+
+            <div class="menu">
+                <a href="/budget" style="text-decoration: none;color: white;"><div class="menu-item">🎯 My Goals</div></a>
+                <a href="/report" style="text-decoration: none;color: white;"><div class="menu-item">📊 Report</div></a>
+                <a href="/ai_insights" style="text-decoration: none;color: white;"><div class="menu-item">⚙ Ai Insights</div></a>
+                <!-- <div class="menu-item">❓ Help & Support</div>  -->
+                <!-- <div class="menu-item logout"><a href="/LOGOUT" style="text-decoration: none;color:rgb(244, 11, 11);font-size: 50px">↩ Log Out</a></div> -->
+            </div>
+
+            <a href="/LOGOUT"><button type="button" class="close-btn">↩ Log Out</button></a>
+        </div>
+    </div>
+
+    
+
+    <style>
+        .bg-dashboard {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, #0a0f1a 0%, #111827 50%, #0a0f1a 100%);
+            opacity: 0.3;
+            display: none;
+        }
+
+        .bg-dashboard::before {
+            content: '';
+            position: absolute;
+            top: 20%;
+            left: 15%;
+            width: 300px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(40px);
+        }
+
+        .bg-dashboard::after {
+            content: '';
+            position: absolute;
+            bottom: 20%;
+            right: 15%;
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(50px);
+        }
+
+        /* Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            padding: 20px;
+        }
+
+        /* Modal Container */
+        .modal {
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.8) 100%);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            width: 100%;
+            max-width: 520px;
+            padding: 28px 32px;
+            position: relative;
+            box-shadow:
+                0 25px 50px -12px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+            backdrop-filter: blur(20px);
+        }
+
+        .modal::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+            border-radius: 20px 20px 0 0;
+        }
+
+        /* Modal Header */
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 6px;
+        }
+
+        .modal-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: -0.3px;
+        }
+
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            color: #9ca3af;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            line-height: 1;
+            padding-bottom: 2px;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+
+        .modal-subtitle {
+            font-size: 14px;
+            color: #9ca3af;
+            margin-bottom: 24px;
+        }
+
+        /* Form Fields */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: #d1d5db;
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 12px 16px;
+            color: #ffffff;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .form-input::placeholder {
+            color: #6b7280;
+        }
+
+        .form-input:focus {
+            border-color: rgba(16, 185, 129, 0.4);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        /* Goal Type Tags */
+        .goal-types {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .goal-type-tag {
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #9ca3af;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .goal-type-tag:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #d1d5db;
+        }
+
+        .goal-type-tag.active {
+            background: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Two Column Layout */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        /* Input with icon */
+        .input-with-icon {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #10b981;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .input-with-icon .form-input {
+            padding-left: 36px;
+        }
+
+        .calendar-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+        }
+
+        .calendar-icon svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Estimated Savings Section */
+        .estimated-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 4px 0;
+        }
+
+        .estimated-label-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .estimated-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #d1d5db;
+        }
+
+        .info-icon {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #9ca3af;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: help;
+        }
+
+        .estimated-sublabel {
+            font-size: 11px;
+            color: #6b7280;
+            margin-top: 2px;
+        }
+
+        .estimated-amount {
+            font-size: 22px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        /* Current Savings */
+        .current-savings-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .current-savings-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #d1d5db;
+            white-space: nowrap;
+        }
+
+        .optional-tag {
+            font-size: 11px;
+            color: #6b7280;
+            font-weight: 400;
+        }
+
+        .current-savings-input {
+            flex: 1;
+        }
+
+        .current-savings-input .form-input {
+            padding-left: 28px;
+        }
+
+        .rupee-prefix {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        .savings-hint {
+            font-size: 11px;
+            color: #6b7280;
+            margin-top: 4px;
+            margin-left: 2px;
+        }
+
+        /* Toggle Switches */
+        .toggle-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .toggle-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #d1d5db;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex-shrink: 0;
+        }
+
+        .toggle-switch.active {
+            background: #10b981;
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: #ffffff;
+            border-radius: 50%;
+            transition: all 0.3s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .toggle-switch.active::after {
+            left: 22px;
+        }
+
+        /* Action Buttons */
+        .modal-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .btn {
+            padding: 14px 24px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            font-family: inherit;
+        }
+
+        .btn-cancel {
+            background: rgba(255, 255, 255, 0.08);
+            color: #d1d5db;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-cancel:hover {
+            background: rgba(255, 255, 255, 0.12);
+            color: #ffffff;
+        }
+
+        .btn-create {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: #ffffff;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-create:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        /* Decorative elements */
+        .glow-rupee {
+            position: fixed;
+            top: 25%;
+            right: 20%;
+            width: 80px;
+            height: 80px;
+            opacity: 0.15;
+            pointer-events: none;
+        }
+
+        .glow-chart {
+            position: fixed;
+            bottom: 25%;
+            right: 15%;
+            width: 100px;
+            height: 100px;
+            opacity: 0.12;
+            pointer-events: none;
+        }
+    </style>
+
+    <div class="bg-dashboard"></div>
+
+    <!-- Decorative Background Elements -->
+    <form action="/addGoal/" method="post">
+        {% csrf_token %}
+        <div class="modal-overlay">
+            <div class="modal">
+                <!-- Header -->
+                <div class="modal-header">
+                    <div>
+                        <h2 class="modal-title">New Goal</h2>
+                    </div>
+                    <button type="button" class="modal-close">×</button>
+                </div>
+                <p class="modal-subtitle">Define your next financial milestone</p>
+
+                <!-- Goal Name -->
+                <div class="form-group">
+                    <label class="form-label">Goal Name</label>
+                    <input type="text" class="form-input" placeholder="e.g., Buy a Car, World Tour 2028, Wedding Fund" name="goalname" required>
+                </div>
+
+                <!-- Goal Type -->
+                <div class="form-group">
+                    <input type="hidden" name="goaltype" id="goaltypeinput" required>
+                    <label class="form-label">Goal Type</label>
+                    <div class="goal-types">
+                        <span class="goal-type-tag" data-value="Emergency Fund">Emergency Fund</span>
+                        <span class="goal-type-tag" data-value="Home Downpayment">Home Downpayment</span>
+                        <span class="goal-type-tag" data-value="Retirement">Retirement</span>
+                        <span class="goal-type-tag" data-value="Vacation/Trip">Vacation/Trip</span>
+                        <span class="goal-type-tag" data-value="Vehicle">Vehicle</span>
+                        <span class="goal-type-tag" data-value="Education">Education</span>
+                        <span class="goal-type-tag" data-value="Wedding">Wedding</span>
+                        <span class="goal-type-tag active" data-value="Other">Other</span>
+                    </div>
+                </div>
+
+                <!-- Target Amount & Date -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Target Amount</label>
+                        <div class="input-with-icon">
+                            <span class="input-icon">₹</span>
+                            <input type="number" class="form-input" value="" name="targetamount" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Target Date</label>
+                        <div class="input-with-icon">
+                            <span class="calendar-icon">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                </svg>
+                            </span>
+                            <input type="date" class="form-input" value="December 2028" name="targetdate" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Estimated Monthly Savings -->
+                <!-- <div class="estimated-section">
+                    <div>
+                        <div class="estimated-label-group">
+                            <span class="estimated-label">Estimated Monthly Savings Required</span>
+                            <span class="info-icon">i</span>
+                        </div>
+                        <div class="estimated-sublabel">Based on target amount and deadline</div>
+                    </div>
+                    <div class="estimated-amount">₹ 15,243</div>
+                </div> -->
+
+                <!-- Current Savings -->
+                <div class="current-savings-row">
+                    <div class="current-savings-label">
+                        Current Savings <span class="optional-tag">(Optional)</span>
+                    </div>
+                    <div class="current-savings-input input-with-icon">
+                        <span class="rupee-prefix">₹</span>
+                        <input type="number" class="form-input" value="" placeholder="0" name="currentsaving">
+                    </div>
+                </div>
+                <div class="savings-hint">Current amount saved towards this goal</div>
+
+                <!-- Toggle Switches -->
+                <div class="toggle-group" style="margin-top: 20px;">
+                    <span class="toggle-label">Make this goal a priority</span>
+                    <input type="hidden" name="prioritystatus" class="priorityToggle">
+                    <div class="toggle-switch" id="priorityToggle"></div>
+                </div>
+                <div class="toggle-group" style="display: none;">
+                    <span class="toggle-label">Receive smart AI insights for this goal</span>
+                    <input type="hidden" name="aistatus" class="aiToggle">
+                    <div class="toggle-switch " id="aiToggle"></div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-cancel">Cancel</button>
+                    <button type="submit" class="btn btn-create" onclick="creategoal()">Create Goal</button>
+                </div>
+            </div>
+        </div>
+    </form> 
+    
+     <style>
+        :root {
+            /* Base font size for rem calculations */
+            font-size: 16px;
+
+            /* Color tokens */
+            --bg-deep: #0a0f1a;
+            --bg-mid: #111827;
+            --bg-card: rgba(30, 41, 59, 0.75);
+            --bg-card-solid: #1e293b;
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --border-medium: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: #d1d5db;
+            --text-muted: #9ca3af;
+            --text-dim: #6b7280;
+            --accent-green: #10b981;
+            --accent-green-dark: #059669;
+            --accent-green-glow: rgba(16, 185, 129, 0.3);
+            --accent-cyan: #22d3ee;
+            --accent-cyan-glow: rgba(34, 211, 238, 0.2);
+            --success: #34d399;
+            --warning: #fbbf24;
+            --overlay-bg: rgba(0, 0, 0, 0.65);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /*  html {
+            font-size: 100%; 16px base 
+        } */
+
+        /* body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, var(--bg-deep) 0%, var(--bg-mid) 50%, var(--bg-deep) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+            overflow: hidden;
+            position: relative;
+        } */ 
+
+        /* Background Dashboard Blur Simulation */
+        .bg-dashboard {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, var(--bg-deep) 0%, var(--bg-mid) 50%, var(--bg-deep) 100%);
+            opacity: 0.25;
+            z-index: 1;
+        }
+
+        .bg-dashboard::before {
+            content: '';
+            position: absolute;
+            top: 20%;
+            left: 10%;
+            width: 18%;
+            height: 25%;
+            background: radial-gradient(circle, var(--accent-green-glow) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(2.5rem);
+        }
+
+        .bg-dashboard::after {
+            content: '';
+            position: absolute;
+            bottom: 15%;
+            right: 8%;
+            width: 20%;
+            height: 30%;
+            background: radial-gradient(circle, var(--accent-cyan-glow) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(3rem);
+        }
+
+        /* Decorative floating elements */
+        .deco-rupee {
+            position: fixed;
+            top: 22%;
+            right: 18%;
+            width: 5%;
+            height: auto;
+            opacity: 0.12;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .deco-chart {
+            position: fixed;
+            bottom: 22%;
+            right: 12%;
+            width: 6%;
+            height: auto;
+            opacity: 0.1;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        /* goalModal Overlay */
+        .goalmodal-overlay {
+            position: fixed;
+            inset: 0;
+            background: var(--overlay-bg);
+            backdrop-filter: blur(0.5rem);
+            -webkit-backdrop-filter: blur(0.5rem);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            padding: 2%;
+        }
+
+        /* goalModal Container */
+        .goalmodal {
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
+            border-radius: 1.25rem;
+            border: 1px solid var(--border-subtle);
+            width: 90%;
+            max-width: 32rem;
+            padding: 1.5rem 2rem;
+            position: relative;
+            box-shadow: 
+                0 1.5rem 3rem -0.75rem rgba(0, 0, 0, 0.6),
+                0 0 0 1px rgba(255, 255, 255, 0.04) inset,
+                0 -1px 0 0 rgba(255, 255, 255, 0.05) inset;
+            backdrop-filter: blur(1.25rem);
+            -webkit-backdrop-filter: blur(1.25rem);
+            z-index: 101;
+        }
+
+        .goalmodal::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 5%;
+            right: 5%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.12), transparent);
+            border-radius: 1.25rem 1.25rem 0 0;
+        }
+
+        /* Modal Header */
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        /* AI Robot Avatar */
+        .ai-avatar {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-cyan) 0%, #0891b2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 0 1rem var(--accent-cyan-glow);
+            flex-shrink: 0;
+        }
+
+        .ai-avatar svg {
+            width: 60%;
+            height: 60%;
+            fill: white;
+        }
+
+        .ai-avatar::after {
+            content: '';
+            position: absolute;
+            inset: -0.15rem;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-cyan), transparent, var(--accent-green));
+            opacity: 0.4;
+            z-index: -1;
+            filter: blur(0.25rem);
+        }
+
+        .header-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+            line-height: 1.3;
+        }
+
+        .modal-subtitle {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.125rem;
+        }
+
+        .modal-close {
+            width: 1.75rem;
+            height: 1.75rem;
+            border-radius: 50%;
+            border: 1px solid var(--border-medium);
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-muted);
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            line-height: 1;
+            padding-bottom: 0.125rem;
+            flex-shrink: 0;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-primary);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Priority Card */
+        .priority-card {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%);
+            border-radius: 0.75rem;
+            padding: 1rem 1.25rem;
+            margin-bottom: 1.25rem;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .priority-label {
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.375rem;
+        }
+
+        .priority-label strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .priority-stats {
+            display: flex;
+            align-items: baseline;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .priority-percent {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .progress-bar-container {
+            flex: 1;
+            height: 0.375rem;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 0.25rem;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 50%;
+            background: linear-gradient(90deg, var(--accent-green) 0%, var(--success) 100%);
+            border-radius: 0.25rem;
+            box-shadow: 0 0 0.5rem var(--accent-green-glow);
+            transition: width 0.6s ease;
+        }
+
+        .priority-detail {
+            font-size: 0.6875rem;
+            color: var(--text-dim);
+        }
+
+        .priority-detail .highlight {
+            color: var(--text-secondary);
+        }
+
+        /* Section Titles */
+        .section-title {
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+            letter-spacing: 0.02em;
+        }
+
+        /* AI Insights List */
+        .insights-list {
+            margin-bottom: 1.25rem;
+        }
+
+        .insight-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.75rem;
+            line-height: 1.5;
+            color: var(--text-muted);
+        }
+
+        .insight-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .insight-bullet {
+            width: 1rem;
+            height: 1rem;
+            min-width: 1rem;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-green) 0%, var(--accent-green-dark) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 0.0625rem;
+            flex-shrink: 0;
+        }
+
+        .insight-bullet svg {
+            width: 60%;
+            height: 60%;
+            fill: white;
+        }
+
+        .insight-item strong {
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .insight-item .time-highlight {
+            color: var(--accent-green);
+            font-weight: 600;
+        }
+
+        .insight-item .amount-highlight {
+            color: var(--accent-cyan);
+            font-weight: 600;
+        }
+
+        .insight-item .action-highlight {
+            color: var(--warning);
+            font-weight: 600;
+        }
+
+        /* Smart Recommendations */
+        .recommendations-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.625rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .rec-card {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+            border-radius: 0.625rem;
+            padding: 0.75rem;
+            border: 1px solid var(--border-subtle);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .rec-card:hover {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%);
+            border-color: var(--border-medium);
+            transform: translateY(-0.125rem);
+        }
+
+        .rec-title {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+            line-height: 1.3;
+        }
+
+        .rec-desc {
+            font-size: 0.625rem;
+            color: var(--text-dim);
+            line-height: 1.4;
+        }
+
+        /* AI Chat Input */
+        .chat-section {
+            margin-bottom: 1rem;
+        }
+
+        .chat-label {
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .chat-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .chat-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-medium);
+            border-radius: 0.625rem;
+            padding: 0.75rem 2.75rem 0.75rem 1rem;
+            color: var(--text-primary);
+            font-size: 0.8125rem;
+            outline: none;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .chat-input::placeholder {
+            color: var(--text-dim);
+        }
+
+        .chat-input:focus {
+            border-color: var(--accent-green);
+            background: rgba(255, 255, 255, 0.07);
+            box-shadow: 0 0 0 0.1875rem var(--accent-green-glow);
+        }
+
+        .chat-send-btn {
+            position: absolute;
+            right: 0.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1.75rem;
+            height: 1.75rem;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-cyan) 0%, #0891b2 100%);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .chat-send-btn:hover {
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 0 0.75rem var(--accent-cyan-glow);
+        }
+
+        .chat-send-btn svg {
+            width: 55%;
+            height: 55%;
+            fill: white;
+        }
+
+        /* Action Buttons */
+        .modal-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 0.625rem;
+        }
+
+        .btn {
+            padding: 0.625rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            font-family: inherit;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .btn-ai {
+            background: linear-gradient(135deg, var(--accent-green) 0%, var(--accent-green-dark) 100%);
+            color: var(--text-primary);
+            box-shadow: 0 0.25rem 0.75rem var(--accent-green-glow);
+        }
+
+        .btn-ai:hover {
+            transform: translateY(-0.0625rem);
+            box-shadow: 0 0.375rem 1rem rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-medium);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-close {
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-muted);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .btn-close:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-secondary);
+        }
+
+        /* Responsive adjustments using percentages and rem */
+        @media (max-width: 640px) {
+            :root {
+                font-size: 14px;
+            }
+
+            .modal {
+                width: 95%;
+                padding: 1.25rem;
+            }
+
+            .recommendations-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-actions {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (min-width: 1920px) {
+            :root {
+                font-size: 18px;
+            }
+        }
+        .chat-box{
+            height: 400px;
+            overflow-y: auto;
+            scrollbar-width: none;
+            /* background: linear-gradient(145deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.8) 100%); */
+            background: linear-gradient(145deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.7) 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+        }
+        .message{
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 10px;
+        }
+        .user{
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.8) 100%);
+            text-align: right;
+        }
+        .ai{
+            background: linear-gradient(145deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.7) 100%);
+        }
+
+        
+    </style>
+
+    <!-- Modal Overlay -->
+    <div class="goalmodal-overlay">
+        <div class="modal">
+            <!-- Header -->
+            <div class="modal-header">
+                <div class="header-left">
+                    <!-- AI Robot Avatar -->
+                    <div class="ai-avatar">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <circle cx="12" cy="8" r="4" fill="white" opacity="0.9"/>
+                            <rect x="6" y="12" width="12" height="8" rx="3" fill="white" opacity="0.9"/>
+                            <circle cx="9" cy="10" r="1.5" fill="#0891b2"/>
+                            <circle cx="15" cy="10" r="1.5" fill="#0891b2"/>
+                            <rect x="10" y="14" width="4" height="2" rx="1" fill="#0891b2" opacity="0.6"/>
+                            <path d="M8 6C8 6 6 8 6 10" stroke="white" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.7"/>
+                            <path d="M16 6C16 6 18 8 18 10" stroke="white" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.7"/>
+                        </svg>
+                    </div>
+                    <div class="header-text">
+                        <h2 class="modal-title">AI Goal Coach</h2>
+                        <span class="modal-subtitle">Personalized AI-powered guidance</span>
+                    </div>
+                </div>
+                <button class="modal-close" id="modal-close">×</button>
+            </div>
+
+            <div class="chat-box"></div>
+
+            <!-- AI Chat Input -->
+            <div class="chat-section">
+                <div class="chat-label">AI Chat Input</div>
+                <div class="chat-input-wrapper">
+                    <input type="text" class="chat-input" placeholder="Ask me anything about your goals...">
+                    <button type="button" class="chat-send-btn" onclick="sendMessage()">
+                        <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <!-- <div class="modal-actions">
+                <button class="btn btn-ai">Ask AI Coach</button>
+                <button class="btn btn-secondary">View Full Plan</button>
+                <button class="btn btn-close">Close</button>
+            </div> -->
+        </div>
+    </div>
+
+   <style>
+        :root {
+            --abyss: #0b0f17;
+            --twilight: #111827;
+            --nebula: rgba(30, 41, 59, 0.85);
+            --void-solid: #1e293b;
+            --whisper: rgba(255, 255, 255, 0.04);
+            --ghost: rgba(255, 255, 255, 0.06);
+            --fog: rgba(255, 255, 255, 0.08);
+            --mist: rgba(255, 255, 255, 0.1);
+            --dawn: #f9fafb;
+            --daybreak: #d1d5db;
+            --dusk: #9ca3af;
+            --midnight: #6b7280;
+            --aurora: #10b981;
+            --verdant: #34d399;
+            --bioluminescence: rgba(16, 185, 129, 0.3);
+            --cyan-flare: #22d3ee;
+            --sapphire: #3b82f6;
+            --obsidian: rgba(0, 0, 0, 0.65);
+        }
+
+        /* ============ BACKGROUND CANVAS ============ */
+        .stardust-canvas {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, var(--abyss) 0%, var(--twilight) 50%, var(--abyss) 100%);
+            opacity: 0.3;
+            z-index: 1;
+            display: none;
+        }
+
+        .stardust-canvas::before {
+            content: '';
+            position: absolute;
+            top: 20%;
+            left: 15%;
+            width: 18%;
+            height: 25%;
+            background: radial-gradient(circle, var(--bioluminescence) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(2.5vmin);
+        }
+
+        .stardust-canvas::after {
+            content: '';
+            position: absolute;
+            bottom: 20%;
+            right: 15%;
+            width: 20%;
+            height: 30%;
+            background: radial-gradient(circle, rgba(34, 211, 238, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(3vmin);
+        }
+
+        /* Floating ethereal elements */
+        .ethereal-rupee {
+            position: fixed;
+            top: 22%;
+            right: 18%;
+            width: 5%;
+            height: auto;
+            opacity: 0.12;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .ethereal-chart {
+            position: fixed;
+            bottom: 25%;
+            right: 12%;
+            width: 6%;
+            height: auto;
+            opacity: 0.1;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        /* ============ PORTAL OVERLAY ============ */
+        .portal-veil {
+            position: fixed;
+            inset: 0;
+            background: var(--obsidian);
+            backdrop-filter: blur(0.5vmin);
+            -webkit-backdrop-filter: blur(0.5vmin);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            padding: 2vh 2vw;
+        }
+
+        /* ============ CRYSTAL CHAMBER ============ */
+        .crystal-chamber {
+            background: linear-gradient(145deg, var(--nebula) 0%, rgba(15, 23, 42, 0.9) 100%);
+            border-radius: 1.5vmin;
+            border: 0.15vmin solid var(--ghost);
+            width: 90%;
+            max-width: 70vmin;
+            padding: 2.5vh 2.5vw;
+            position: relative;
+            box-shadow: 
+                0 2vmin 4vmin -1vmin rgba(0, 0, 0, 0.6),
+                0 0 0 0.1vmin rgba(255, 255, 255, 0.04) inset,
+                0 -0.1vmin 0 0 rgba(255, 255, 255, 0.05) inset;
+            backdrop-filter: blur(1.5vmin);
+            -webkit-backdrop-filter: blur(1.5vmin);
+            z-index: 101;
+        }
+
+        .crystal-chamber::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 5%;
+            right: 5%;
+            height: 0.1vmin;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+            border-radius: 1.5vmin 1.5vmin 0 0;
+        }
+
+        /* ============ CHAMBER CROWN ============ */
+        .chamber-crown {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5vh;
+        }
+
+        .crown-jewel {
+            font-size: 2.8vmin;
+            font-weight: 700;
+            color: var(--verdant);
+            letter-spacing: -0.02em;
+        }
+
+        .crown-seal {
+            width: 3vmin;
+            height: 3vmin;
+            min-width: 2.5vmin;
+            min-height: 2.5vmin;
+            border-radius: 50%;
+            border: 0.15vmin solid var(--mist);
+            background: var(--whisper);
+            color: var(--dusk);
+            font-size: 2vmin;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            line-height: 1;
+            padding-bottom: 0.2vmin;
+            flex-shrink: 0;
+        }
+
+        .crown-seal:hover {
+            background: var(--ghost);
+            color: var(--dawn);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        /* ============ MEMORY SLATE ============ */
+        .memory-slate {
+            background: linear-gradient(145deg, var(--ghost) 0%, rgba(255, 255, 255, 0.02) 100%);
+            border-radius: 1vmin;
+            padding: 1.5vh 1.5vw;
+            margin-bottom: 2vh;
+            border: 0.15vmin solid var(--ghost);
+        }
+
+        .slate-etching {
+            font-size: 1.8vmin;
+            color: var(--daybreak);
+            margin-bottom: 0.5vh;
+        }
+
+        .slate-etching strong {
+            color: var(--dawn);
+            font-weight: 600;
+        }
+
+        .slate-trace {
+            font-size: 1.6vmin;
+            color: var(--dusk);
+            margin-bottom: 1vh;
+        }
+
+        .pulse-track {
+            width: 100%;
+            height: 0.6vh;
+            background: var(--ghost);
+            border-radius: 0.3vh;
+            overflow: hidden;
+        }
+
+        .pulse-essence {
+            height: 100%;
+            width: 4%;
+            background: linear-gradient(90deg, var(--aurora) 0%, var(--verdant) 100%);
+            border-radius: 0.3vh;
+            box-shadow: 0 0 0.5vmin var(--bioluminescence);
+            transition: width 0.6s ease;
+        }
+
+        /* ============ OFFERING ALTAR ============ */
+        .offering-altar {
+            margin-bottom: 2vh;
+        }
+
+        .altar-inscription {
+            display: block;
+            font-size: 1.8vmin;
+            font-weight: 500;
+            color: var(--daybreak);
+            margin-bottom: 1vh;
+        }
+
+        .tribute-vessel {
+            position: relative;
+            margin-bottom: 1.5vh;
+        }
+
+        .tribute-offering {
+            width: 100%;
+            background: var(--whisper);
+            border: 0.15vmin solid var(--mist);
+            border-radius: 1vmin;
+            padding: 1.5vh 1.5vw 1.5vh 4vw;
+            color: var(--dawn);
+            font-size: 2.5vmin;
+            font-weight: 600;
+            outline: none;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .tribute-offering:focus {
+            border-color: var(--aurora);
+            background: var(--ghost);
+            box-shadow: 0 0 0 0.3vmin var(--bioluminescence);
+        }
+
+        .tribute-sigil {
+            position: absolute;
+            left: 1.5vw;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--aurora);
+            font-size: 2.5vmin;
+            font-weight: 600;
+        }
+
+        /* ============ RUNE STONES ============ */
+        .rune-circle {
+            display: flex;
+            gap: 1vw;
+            flex-wrap: wrap;
+            margin-bottom: 1vh;
+        }
+
+        .rune-stone {
+            padding: 1vh 1.5vw;
+            background: var(--whisper);
+            border: 0.15vmin solid var(--mist);
+            border-radius: 0.8vmin;
+            color: var(--dusk);
+            font-size: 1.6vmin;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .rune-stone:hover {
+            background: var(--ghost);
+            color: var(--daybreak);
+            border-color: var(--mist);
+        }
+
+        .rune-stone.activated {
+            background: rgba(16, 185, 129, 0.15);
+            border-color: var(--aurora);
+            color: var(--verdant);
+        }
+
+        /* ============ WHISPER WIND ============ */
+        .whisper-wind {
+            font-size: 1.4vmin;
+            color: var(--midnight);
+            margin-bottom: 2vh;
+            line-height: 1.5;
+        }
+
+        /* ============ FATE THREADS ============ */
+        .fate-threads {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5vw;
+        }
+
+        .thread-of-void {
+            padding: 1.5vh 2vw;
+            border-radius: 1vmin;
+            font-size: 1.8vmin;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            font-family: inherit;
+            text-align: center;
+        }
+
+        .thread-of-void.abandon {
+            background: var(--ghost);
+            color: var(--daybreak);
+            border: 0.15vmin solid var(--mist);
+        }
+
+        .thread-of-void.abandon:hover {
+            background: var(--fog);
+            color: var(--dawn);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .thread-of-void.manifest {
+            background: linear-gradient(135deg, var(--aurora) 0%, var(--verdant) 100%);
+            color: var(--dawn);
+            box-shadow: 0 0.5vmin 1.5vmin var(--bioluminescence);
+        }
+
+        .thread-of-void.manifest:hover {
+            transform: translateY(-0.2vh);
+            box-shadow: 0 0.8vmin 2vmin rgba(16, 185, 129, 0.4);
+        }
+
+        /* ============================================
+           RESPONSIVE TRANSMUTATIONS
+           ============================================ */
+
+        /* Tablet Landscape */
+        @media (max-aspect-ratio: 16/10) {
+            body {
+                font-size: 2.5vmin;
+            }
+            .crystal-chamber {
+                max-width: 55vmin;
+                padding: 2vh 3vw;
+            }
+            .crown-jewel {
+                font-size: 3vmin;
+            }
+            .tribute-offering {
+                font-size: 3vmin;
+                padding-left: 5vw;
+            }
+            .tribute-sigil {
+                font-size: 3vmin;
+            }
+            .rune-stone {
+                font-size: 2vmin;
+                padding: 1.2vh 2vw;
+            }
+            .thread-of-void {
+                font-size: 2vmin;
+            }
+        }
+
+        /* Tablet Portrait */
+        @media (max-aspect-ratio: 3/4) {
+            body {
+                font-size: 2.8vmin;
+            }
+            .crystal-chamber {
+                max-width: 70vmin;
+                padding: 2.5vh 4vw;
+            }
+            .crown-jewel {
+                font-size: 3.5vmin;
+            }
+            .altar-inscription {
+                font-size: 2.2vmin;
+            }
+            .tribute-offering {
+                font-size: 3.5vmin;
+                padding-left: 6vw;
+            }
+            .tribute-sigil {
+                font-size: 3.5vmin;
+            }
+            .rune-circle {
+                gap: 1.5vw;
+            }
+            .rune-stone {
+                font-size: 2.2vmin;
+                padding: 1.2vh 2.5vw;
+            }
+            .whisper-wind {
+                font-size: 1.8vmin;
+            }
+            .thread-of-void {
+                font-size: 2.2vmin;
+                padding: 1.8vh 2.5vw;
+            }
+        }
+
+        /* Mobile Landscape */
+        @media (max-aspect-ratio: 16/9) and (max-width: 900px) {
+            .crystal-chamber {
+                max-width: 80vmin;
+            }
+        }
+
+        /* Mobile Portrait */
+        @media (max-aspect-ratio: 9/16) {
+            body {
+                font-size: 3.2vmin;
+            }
+            .portal-veil {
+                padding: 1vh 3vw;
+                align-items: flex-end;
+            }
+            .crystal-chamber {
+                max-width: 100%;
+                width: 100%;
+                border-radius: 2vmin 2vmin 0 0;
+                padding: 2vh 4vw;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+            .crystal-chamber::before {
+                border-radius: 2vmin 2vmin 0 0;
+            }
+            .crown-jewel {
+                font-size: 4vmin;
+            }
+            .crown-seal {
+                width: 4vmin;
+                height: 4vmin;
+                font-size: 2.5vmin;
+            }
+            .slate-etching {
+                font-size: 2.5vmin;
+            }
+            .slate-trace {
+                font-size: 2.2vmin;
+            }
+            .altar-inscription {
+                font-size: 2.5vmin;
+            }
+            .tribute-offering {
+                font-size: 4vmin;
+                padding-left: 8vw;
+                padding-top: 2vh;
+                padding-bottom: 2vh;
+            }
+            .tribute-sigil {
+                font-size: 4vmin;
+            }
+            .rune-circle {
+                gap: 2vw;
+            }
+            .rune-stone {
+                font-size: 2.5vmin;
+                padding: 1.5vh 3vw;
+                flex: 1;
+                min-width: 15vw;
+                text-align: center;
+            }
+            .whisper-wind {
+                font-size: 2.2vmin;
+            }
+            .thread-of-void {
+                font-size: 2.5vmin;
+                padding: 2vh 3vw;
+            }
+        }
+
+        /* Very Small Mobile */
+        @media (max-width: 320px) {
+            body {
+                font-size: 3.5vmin;
+            }
+            .rune-stone {
+                min-width: 20vw;
+            }
+        }
+    </style>
+
+<form action="/addExpenceOnGoal/" method="post" class="addamounttogoalHTML">
+    {% csrf_token %}
+
+    <div class="stardust-canvas"></div>
+
+    <!-- Floating Ethereal Elements -->
+    <div class="ethereal-rupee">
+        <svg viewBox="0 0 100 100" fill="none">
+            <circle cx="50" cy="50" r="45" fill="url(#rupeeGrad)" opacity="0.3"/>
+            <text x="50" y="68" text-anchor="middle" fill="#10b981" font-size="55" font-weight="bold">₹</text>
+            <defs>
+                <radialGradient id="rupeeGrad" cx="50%" cy="50%">
+                    <stop offset="0%" stop-color="#10b981" stop-opacity="0.5"/>
+                    <stop offset="100%" stop-color="#10b981" stop-opacity="0"/>
+                </radialGradient>
+            </defs>
+        </svg>
+    </div>
+
+    <div class="ethereal-chart">
+        <svg viewBox="0 0 100 100" fill="none">
+            <rect x="15" y="55" width="14" height="30" rx="3" fill="#10b981" opacity="0.5"/>
+            <rect x="35" y="40" width="14" height="45" rx="3" fill="#10b981" opacity="0.6"/>
+            <rect x="55" y="25" width="14" height="60" rx="3" fill="#10b981" opacity="0.7"/>
+            <rect x="75" y="15" width="14" height="70" rx="3" fill="#10b981" opacity="0.8"/>
+            <path d="M22 50 L42 35 L62 22 L82 12" stroke="#10b981" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.9"/>
+            <circle cx="82" cy="12" r="4" fill="#10b981"/>
+        </svg>
+    </div>
+
+    <!-- Portal Overlay -->
+    <div class="portal-veil">
+        <div class="crystal-chamber">
+            <!-- Chamber Crown -->
+            <div class="chamber-crown">
+                <h2 class="crown-jewel">Add Amount to Goal</h2>
+                <button type="button" class="crown-seal">×</button>
+            </div>
+
+            <!-- Memory Slate -->
+            <div class="memory-slate">
+                <div class="slate-etching">Goal Name: <strong class="aatgt">Vacation/Trip</strong></div>
+                <div class="slate-trace">Current Progress: ₹2,000 / ₹50,000 (4%)</div>
+                <div class="pulse-track">
+                    <div class="pulse-essence"></div>
+                </div>
+            </div>
+
+            <!-- Offering Altar -->
+            <div class="offering-altar">
+                <label class="altar-inscription">Amount to Add</label>
+                <div class="tribute-vessel">
+                    <span class="tribute-sigil">₹</span>
+                    <input type="number" class="tribute-offering" value="" name="amount" required placeholder="0">
+                    <input type="hidden" class="tribute-offering-desc" style="display: none;" name="desc" value="">
+                    <input type="hidden" class="tribute-offering-goalname" style="display: none;" name="goalname" value="">
+                    <input type="hidden" class="tribute-offering-targetdate" style="display: none;" name="targetdate" value="">
+                    <input type="hidden" class="tribute-offering-targetamount" style="display: none;" name="targetamount" value="">
+
+                </div>
+
+                <!-- Rune Circle -->
+                <div class="rune-circle">
+                    <button type="button" class="rune-stone">₹1,000</button>
+                    <button type="button" class="rune-stone">₹2,000</button>
+                    <button type="button" class="rune-stone">₹5,000</button>
+                    <button type="button" class="rune-stone">₹10,000</button>
+                    <button type="button" class="rune-stone">₹20,000</button>
+                </div>
+            </div>
+
+            <!-- Whisper Wind -->
+            <div class="whisper-wind">This will update your goal progress instantly</div>
+
+            <!-- Fate Threads -->
+            <div class="fate-threads">
+                <button type="button" class="thread-of-void abandon">Cancel</button>
+                <button type="submit" class="thread-of-void manifest">Add Amount</button>
+            </div>
+        </div>
+    </div>
+</form>
+    <!-- </div> -->
+
+    <script class="addamounttogoalscript">
+        // Seal the chamber (close modal)
+        document.querySelector('.crown-seal').addEventListener('click', function() {
+            document.querySelector('.portal-veil').style.opacity = '0';
+            document.querySelector('.portal-veil').style.transition = 'opacity 0.3s ease';
+            setTimeout(() => {
+                document.querySelector('.portal-veil').style.display = 'none';
+                document.querySelector('.stardust-canvas').style.display = 'none';
+            }, 300);
+        });
+
+        document.querySelector('.thread-of-void.abandon').addEventListener('click', function() {
+            document.querySelector('.portal-veil').style.opacity = '0';
+            document.querySelector('.portal-veil').style.transition = 'opacity 0.3s ease';
+            setTimeout(() => {
+                document.querySelector('.portal-veil').style.display = 'none';
+                document.querySelector('.stardust-canvas').style.display = 'none';
+            }, 300);
+        });
+
+        // Activate rune stones
+        document.querySelectorAll('.rune-stone').forEach(stone => {
+            stone.addEventListener('click', function() {
+                document.querySelectorAll('.rune-stone').forEach(s => s.classList.remove('activated'));
+                this.classList.add('activated');
+
+                // Update tribute offering
+                const value = this.textContent.replace('₹', '').replace(',', '');
+                document.querySelector('.tribute-offering').value = parseInt(value);
+            });
+        });
+
+        // Manifest the offering (add amount)
+        document.querySelector('.thread-of-void.manifest').addEventListener('click', function() {
+            this.textContent = 'Adding...';
+            setTimeout(() => {
+                this.textContent = 'Added!';
+                this.style.background = 'linear-gradient(135deg, #059669 0%, #047857 100%)';
+            }, 800);
+        });
+
+        // Animate pulse essence on load
+        window.addEventListener('load', function() {
+            const essence = document.querySelector('.pulse-essence');
+            essence.style.width = '0%';
+            setTimeout(() => {
+                essence.style.width = '4%';
+            }, 300);
+        });
+    </script>
+
+    <script>
+        
+        let messages = []
+        function sendMessage(){
+            const input = document.querySelector('.chat-input')
+            const message = input.value
+            messages.push(message)
+            
+            if(message.trim()==""){
+                return
+            }
+
+            // if(messages.includes("")){
+            //     messages = messages.filter(item => item !== "");
+            //     return
+            // }
+            console.log(messages)
+
+            const chatBox = document.querySelector('.chat-box')
+
+            chatBox.innerHTML += `<div class="message user">${message}</div>`
+
+            input.value =""
+
+            chatBox.innerHTML+=`<div class="message ai thinking">Thinking...</div>`
+
+            fetch('/chat_ai/',{
+                method:'POST',
+                headers:{
+                    'Content-Type':'application/json',
+                    'X-CSRFToken':getCookie('csrftoken')
+                },
+                body:JSON.stringify({
+                    message:message
+                })
+            })
+            .then(res=>res.json())
+            .then(data=>{
+                document.querySelector('.thinking').remove()
+
+                chatBox.innerHTML+=`<div class="message ai">
+                    ${data.reply}</div>`
+
+                chatBox.scrollTop = chatBox.scrollHeight
+            })
+        }
+
+        function getCookie(name){
+            let cookieValue = null;
+            if(document.cookie && document.cookie!==""){
+                const cookies = document.cookie.split(';');
+                for (let i = 0;i<cookies.length;i++){
+                    const cookie = cookies[i].trim();
+                    if(cookie.substring(0,name.length+1)===(name+'=')){
+                        cookieValue = decodeURIComponent(cookie.substring(name.length+1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+   
+       function amodal(){
+        document.querySelector(".modalunique").style.display="none"
+    }
+
+    function bmodal(){
+        document.querySelector(".modalunique").style.display="block"
+    }
+
+    function UserData(){
+        fetch('/user-data/')
+        .then(res=>res.json())
+        .then(data=>{
+            console.log(data.username,data.email,data.date)
+            document.getElementById('modaldate8').innerHTML=data.date
+            document.getElementById('modal').innerHTML='Hi '+data.username+' ⭐'
+            document.querySelector('.name').innerHTML=data.username;
+            document.querySelector('.email').innerHTML=data.email
+            document.getElementById('prifile-pic').src="https://api.dicebear.com/9.x/personas/svg?seed="+Math.random()
+        })
+}
+
+UserData()
+   
+   </script>
+
+    <script>
+        // Close modal
+        document.querySelector('#modal-close').addEventListener('click', function() {
+            document.querySelector('.goalmodal-overlay').style.display = 'none';
+            const chatBox = document.querySelector('.chat-box');
+            chatBox.innerHTML=""
+            // document.querySelector('.goalmodal').style.display = 'none';
+            // console.log("yes1")
+           
+        });
+
+        // document.querySelector('#btn-close').addEventListener('click', function() {
+        //     document.querySelector('.goalmodal-overlay').style.display = 'none';
+        //     document.querySelector('.goalmodal').style.display = 'none';
+        //     // console.log("yes2")
+        // });
+
+        // document.querySelector('.coach-btn').addEventListener('click', function() {
+        //     document.querySelector('.goalmodal-overlay').style.display = 'block';
+        //     document.querySelector('.goalmodal').style.display = 'block';
+        //     // console.log("yes2")
+        // });
+
+
+        // Recommendation card click
+        document.querySelectorAll('.rec-card').forEach(card => {
+            card.addEventListener('click', function() {
+                this.style.transform = 'translateY(-0.125rem) scale(0.98)';
+                setTimeout(() => {
+                    this.style.transform = 'translateY(-0.125rem)';
+                }, 150);
+            });
+        });
+
+        // Chat input focus
+        const chatInput = document.querySelector('.chat-input');
+        chatInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const btn = document.querySelector('.chat-send-btn');
+                btn.style.transform = 'translateY(-50%) scale(0.9)';
+                setTimeout(() => {
+                    btn.style.transform = 'translateY(-50%) scale(1.1)';
+                    setTimeout(() => {
+                        btn.style.transform = 'translateY(-50%) scale(1)';
+                    }, 150);
+                }, 100);
+            }
+        });
+
+        // Button interactions
+        document.querySelector('.btn-ai').addEventListener('click', function() {
+            this.textContent = 'Thinking...';
+            setTimeout(() => {
+                this.textContent = 'Ask AI Coach';
+            }, 2000);
+        });
+
+        // Animate progress bar on load
+        window.addEventListener('load', function() {
+            const progressBar = document.querySelector('.progress-bar-fill');
+            progressBar.style.width = '0%';
+            setTimeout(() => {
+                progressBar.style.width = '50%';
+            }, 300);
+        });
+    </script>
+
+    <script>
+        // Toggle switch interactions
+        document.querySelectorAll('.toggle-switch').forEach(toggle => {
+            toggle.addEventListener('click', function() {
+                this.classList.toggle('active');
+                let i= document.querySelector('.priorityToggle');
+                let i2= document.querySelector('.aiToggle');
+                let p = document.getElementById('priorityToggle');
+                let p2 = document.getElementById('aiToggle');
+                if (p.classList.contains('active')){
+                    i.value = 'on'
+                    console.log('p, on')
+                }else{
+                    i.value = 'off'
+                    console.log('p, off')
+                }
+
+                if (p2.classList.contains('active')){
+                    i2.value = 'on'
+                    console.log('p2, on')
+                }else{
+                    i2.value = 'off'
+                    console.log('p2, off')
+                }
+                
+            });
+        });
+
+        // Goal type tag selection
+        document.querySelectorAll('.goal-type-tag').forEach(tag => {
+            tag.addEventListener('click', function() {
+                document.querySelectorAll('.goal-type-tag').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById('goaltypeinput').value=this.getAttribute('data-value')
+                console.log(this.getAttribute('data-value'))
+            });
+        });
+
+        // Close modal
+        document.querySelector('.modal-close').addEventListener('click', function() {
+            // document.querySelector('.modal-overlay').style.opacity = '0';
+            setTimeout(() => {
+                document.querySelector('.modal-overlay').style.display = 'none';
+                document.querySelector('.bg-dashboard').style.display = 'none';
+            }, 100);
+        });
+
+        // Button interactions
+        document.querySelector('.btn-cancel').addEventListener('click', function() {
+            // document.querySelector('.modal-overlay').style.opacity = '0';
+            setTimeout(() => {
+                document.querySelector('.modal-overlay').style.display = 'none';
+                document.querySelector('.bg-dashboard').style.display = 'none';
+            }, 100);
+        });
+
+        document.querySelector('.btn-create').addEventListener('click', function() {
+            this.textContent = 'Creating...';
+            setTimeout(() => {
+                this.textContent = 'Goal Created!';
+                this.style.background = 'linear-gradient(135deg, #059669 0%, #047857 100%)';
+            }, 500);
+        });
+
+        document.querySelector('.add-btn').addEventListener('click', function() {
+            setTimeout(() => {
+                document.querySelector('.modal-overlay').style.display = 'flex';
+                document.querySelector('.bg-dashboard').style.display = 'flex';
+            }, 100);
+        });
+
+
+    </script>
+
+
+
+    <script>
+        // Add subtle animations
+        document.querySelectorAll('.goal-card, .goal-card-with-chart, .sidebar-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-2px)';
+                this.style.transition = 'transform 0.3s ease';
+            });
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Tab interactions
+        document.querySelectorAll('.nav-tab, .filter-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                this.parentElement.querySelectorAll('.nav-tab, .filter-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        function creategoal(){
+            fetch('/addGoalJson/')
+            .then(res=>res.json())
+            .then(data=>{
+                let gn = data.gn
+                let gt = data.gt
+                let ta = data.ta
+                let td = data.td
+                let cs = data.cs
+                let ps = data.ps
+                let ais = data.ais
+                let mra = data.mra
+                let createddate = data.createddate
+                // let aijson = data.aijson
+                // console.log(aijson)
+                // console.log(data.gn,data.cs)
+                const newadd = document.querySelector(".goals-row");
+                newadd.innerHTML="";
+                const newadd2 = document.querySelector(".bottom-row");
+                newadd2.innerHTML="";
+                // const newsame = document.createElement("div");
+
+                for(let i=0; i<=gn.length;i++){
+                    let per = ta[i]? cs[i]/ta[i]:0;
+                    if(ps[i]=="off"){
+                        
+                        const newsame = document.createElement("div");
+                        newsame.classList.add("goal-card");
+                        newsame.innerHTML =`<div class="goal-title goal-title${[i]}">${gt[i]} :- ${gn[i]}</div>
+                            <div class="goal-amount goal-amount${[i]}">
+                                <span class="current current${[i]}">₹${cs[i].toLocaleString("en-IN")}</span > / <span class='tamount'>₹${ta[i].toLocaleString("en-IN")}</span>
+                            </div>
+                            <div class="goal-percentage goal-percentage${[i]}">${(per*100).toFixed(2)}%</div>
+                            <div class="goal-target goal-target${[i]}">Target: ${td[i]}</div>
+                            <div class="goal-monthly goal-monthly${[i]}">
+                                Monthly needed: <span class="amount amount${[i]}">₹${(Math.ceil(ta[i]/mra[i])).toLocaleString('en-IN')}</span>
+                            </div>
+                            <div style="display:flex;justify-content: space-between; flex-direction:column">
+                                <button type="button" class="add-btn add-btn${[i]}">
+                                <span>+</span>
+                                <span>Add Amount</span>
+                            </button><span class="goal-status on-track ai-text-${i}">Thinking...</span></div>`;
+                        if(cs[i]>=ta[i]){
+                            newsame.querySelector('.add-btn').style.display='none';
+                        }
+                        // console.log(cs[i],ta[i])
+
+                        newadd.appendChild(newsame);
+                        fetch(`/singleGoalAi/${i}/`)
+                        .then(res=>res.json())
+                        .then(ai=>{
+                            document.querySelector(`.ai-text-${i}`).innerText= ai.reply
+                        })
+                        newsame.querySelector('.add-btn').addEventListener('click', function(){
+                            document.querySelector('.stardust-canvas').style.display = 'block';
+                            document.querySelector('.portal-veil').style.opacity = '100%';
+                            document.querySelector('.portal-veil').style.display = 'flex';
+
+                            document.querySelector('.aatgt').innerHTML=gt[i];
+                            document.querySelector('.slate-trace').innerHTML=`Current Progress: ₹${cs[i].toLocaleString("en-IN")} / ₹${ta[i].toLocaleString("en-IN")} (${per*100}%)`;
+                            document.querySelector('.pulse-essence').style.width=`${per*100}%`;
+                            document.querySelector('.tribute-offering-desc').value=gt[i]
+                            console.log('1',td[i], ta[i])
+                            document.querySelector('.tribute-offering-goalname').value=gn[i]
+                            console.log('2',td[i], ta[i])
+                            console.log('move')
+                            document.querySelector('.tribute-offering-targetdate').value=td[i]
+                            document.querySelector('.tribute-offering-targetamount').value=ta[i]
+                            console.log('3',td[i], ta[i])
+
+                        // let ava = document.querySelector('.tribute-offering-desc').value=gt[i]
+                        // console.log(ava)
+                            console.log(newsame.querySelector('.add-btn').className)
+                    })
+                    }else if (ps[i]=="on") {
+                        let per = ta[i]? cs[i]/ta[i]:0;
+                        const newsame = document.createElement("div");
+                        newsame.classList.add("goal-card-with-chart");
+                        newsame.innerHTML =`<div class="chart-header">
+                            <div>
+                                <div class="goal-title">${gt[i]} :- ${gn[i]}</div>
+                                <div class="goal-amount">
+                                    <span class="current">₹${cs[i].toLocaleString("en-IN")}</span> / <span class='tamount'>₹${ta[i].toLocaleString("en-IN")}</span>
+                                </div>
+                                <div class="goal-percentage">${(per*100).toFixed(2)}%</div>
+                                <div class="goal-target">Target: ${td[i]}</div>
+                                <div class="goal-monthly">
+                                    Monthly needed: <span class="amount">₹${(Math.ceil(ta[i]/mra[i])).toLocaleString('en-IN')}</span>
+                                </div>
+                            </div>
+                            <span class="new-badge">Priority Goal</span>
+                        </div>
+                        <div style="display:flex;justify-content: space-between;"><span class="goal-status on-track ai-text-${i}">Thinking...</span>
+                                <button type="button" class="add-btn add-btn${[i]}">
+                                <span>+</span>
+                                <span>Add Amount</span>
+                            </button></div>`;
+
+                        if(cs[i]>=ta[i]){
+                            newsame.querySelector('.add-btn').style.display='none';
+                        }
+                        // console.log(cs[i],ta[i])
+
+                        
+
+                        newadd2.appendChild(newsame);
+                        fetch(`/singleGoalAi/${i}/`)
+                        .then(res=>res.json())
+                        .then(ai=>{
+                            document.querySelector(`.ai-text-${i}`).innerText= ai.reply
+                        })
+                        newsame.querySelector('.add-btn').addEventListener('click', function(){
+                            document.querySelector('.stardust-canvas').style.display = 'block';
+                            document.querySelector('.portal-veil').style.opacity = '100%';
+                            document.querySelector('.portal-veil').style.display = 'flex';
+
+                            document.querySelector('.aatgt').innerHTML=gt[i];
+                            document.querySelector('.slate-trace').innerHTML=`Current Progress: ₹${cs[i].toLocaleString("en-IN")} / ₹${ta[i].toLocaleString("en-IN")} (${per*100}%)`;
+                            document.querySelector('.pulse-essence').style.width=`${per*100}%`;
+                            document.querySelector('.tribute-offering-desc').value=gt[i]
+                            document.querySelector('.tribute-offering-goalname').value=gn[i]
+                            document.querySelector('.tribute-offering-targetdate').value=td[i]
+                            document.querySelector('.tribute-offering-targetamount').value=ta[i]
+                            console.log('3',td[i], ta[i])
+                        // let ava = document.querySelector('.tribute-offering-desc').value=gt[i]
+                        // console.log(ava)
+                            console.log(newsame.querySelector('.add-btn').className)
+                    })
+                    } else {
+                        
+                    }
+                    
+                }
+            
+           
+            // newsame.classList.add("goal-card");
+            // newsame.innerHTML =`<div class="goal-title">Emergency Fund</div>
+            //     <div class="goal-amount">
+            //         <span class="current">₹3,25,000</span> / ₹5,00,000
+            //     </div>
+            //     <div class="goal-percentage">65%</div>
+            //     <div class="goal-target">Target: Jun 2026</div>
+            //     <div class="goal-monthly">
+            //         Monthly needed: <span class="amount">₹15,000</span>
+            //     </div>
+            //     <span class="goal-status on-track">On track +3 weeks ahead</span>`;
+
+            // newadd.appendChild(newsame);
+
+           
+            // <div class="goal-card">
+                // <div class="goal-title">Emergency Fund</div>
+                // <div class="goal-amount">
+                //     <span class="current">₹3,25,000</span> / ₹5,00,000
+                // </div>
+                // <div class="goal-percentage">65%</div>
+                // <div class="goal-target">Target: Jun 2026</div>
+                // <div class="goal-monthly">
+                //     Monthly needed: <span class="amount">₹15,000</span>
+                // </div>
+                // <span class="goal-status on-track">On track +3 weeks ahead</span>
+            // </div>
+        })};
+
+
+        creategoal()
+        // setInterval(creategoal,3000);
+
+        function aigoal(){
+            
+            setTimeout(() => {
+                document.querySelector('.goalmodal-overlay').style.display = 'flex';
+            }, 500);
+            const chatBox = document.querySelector('.chat-box')
+            chatBox.innerHTML+=`<div class="message ai thinking">Wait a second.</div>`
+            const m = document.querySelector('.chat-send-btn');
+            m.style.display='none';
+            // document.querySelector('.goalmodal-overlay').style.display = 'flex';
+            // document.querySelector('.goalmodal').style.display = 'flex';
+            const start = performance.now();
+            fetch('/ai_goal_coach/')
+            .then(res=>res.json())
+            .then(data=>{
+                console.log(performance.now()-start)
+                // chatBox.innerHTML+=`<div class="message ai thinking">Thinking...</div>`
+                
+                document.querySelector('.thinking').remove()
+                chatBox.innerHTML+=`<div class="message ai">
+                    ${data.insight}</div>`
+                console.log(data.insight)
+                
+                m.style.display='flex';
+
+            })
+
+        };
+        // aigoal()
+
+        function completedGoal(){
+            document.querySelectorAll('.goal-card-with-chart, .goal-card').forEach(element => {
+                let csaving = element.querySelector('.current').textContent.replace(/[₹,]/g,'');
+                let tamount = element.querySelector('.tamount').textContent.replace(/[₹,]/g,'');
+                if (!(Number(csaving) >= Number(tamount))){
+                    element.style.display = 'none';
+                }else{
+                    element.style.display = 'block';
+                }
+            
+            });
+        }
+
+        function viewallGoal(){
+            document.querySelectorAll('.goal-card-with-chart, .goal-card').forEach(element => {
+                let csaving = element.querySelector('.current').textContent.replace(/[₹,]/g,'');
+                let tamount = element.querySelector('.tamount').textContent.replace(/[₹,]/g,'');
+                element.style.display = 'block';
+                           
+            });
+        }
+
+        function inprogressGoal(){
+            document.querySelectorAll('.goal-card-with-chart, .goal-card').forEach(element => {
+                let csaving = element.querySelector('.current').textContent.replace(/[₹,]/g,'');
+                let tamount = element.querySelector('.tamount').textContent.replace(/[₹,]/g,'');
+                if (Number(csaving) >= Number(tamount)){
+                    element.style.display = 'none';
+                }else{
+                    element.style.display = 'block';
+                }
+            
+            });
+        }
+        
+        
+    </script>
+</body>
+
+
+</html>

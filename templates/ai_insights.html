@@ -1,0 +1,911 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Insights</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body{
+    min-height:100vh;
+    background:
+        radial-gradient(circle at top right, rgba(0,255,170,0.12), transparent 30%),
+        radial-gradient(circle at bottom left, rgba(0,140,255,0.12), transparent 30%),
+        linear-gradient(135deg,#07111d,#0d1628,#111827);
+    color:white;
+    overflow-x:hidden;
+}
+
+.ai-page{
+    padding:30px;
+    max-width:1600px;
+    margin:auto;
+}
+
+.page-title{
+    font-size:2.3rem;
+    font-weight:700;
+    margin-bottom:25px;
+    letter-spacing:1px;
+    color:#e8f4ff;
+}
+
+.glass{
+    background:rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.08);
+    backdrop-filter:blur(18px);
+    border-radius:24px;
+    box-shadow:
+        0 8px 40px rgba(0,0,0,0.35),
+        inset 0 1px 0 rgba(255,255,255,0.04);
+}
+
+.hero{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:30px;
+    margin-bottom:25px;
+    position:relative;
+    overflow:hidden;
+}
+
+.hero::before{
+    content:'';
+    position:absolute;
+    width:250px;
+    height:250px;
+    border-radius:50%;
+    background:rgba(0,255,170,0.08);
+    top:-80px;
+    right:-50px;
+    filter:blur(20px);
+}
+
+.hero-left{
+    z-index:2;
+}
+
+.hero-left h1{
+    font-size:2rem;
+    margin-bottom:12px;
+}
+
+.hero-left p{
+    color:#b8c7da;
+    max-width:550px;
+    line-height:1.6;
+}
+
+.personality-badge{
+    margin-top:16px;
+    display:inline-block;
+    padding:10px 18px;
+    border-radius:30px;
+    background:rgba(0,255,170,0.12);
+    color:#00ffb7;
+    font-weight:600;
+    border:1px solid rgba(0,255,170,0.18);
+}
+
+.health-ring-box{
+    width:200px;
+    height:200px;
+    position:relative;
+}
+
+.health-ring-box svg{
+    transform:rotate(-90deg);
+}
+
+.health-score-text{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    text-align:center;
+}
+
+.health-score-text h2{
+    font-size:2.3rem;
+}
+
+.health-score-text p{
+    color:#9eb0c7;
+    font-size:0.9rem;
+}
+
+.insight-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+    margin-bottom:25px;
+}
+
+.insight-card{
+    padding:22px;
+    min-height:250px;
+}
+
+.insight-card h3{
+    margin-bottom:18px;
+    font-size:1.2rem;
+}
+
+.insight-list{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+}
+
+.insight-item{
+    padding:14px;
+    border-radius:14px;
+    font-size:0.95rem;
+    line-height:1.5;
+}
+
+.warning-item{
+    background:rgba(255,94,94,0.08);
+    border:1px solid rgba(255,94,94,0.15);
+    color:#ffb4b4;
+}
+
+.positive-item{
+    background:rgba(0,255,170,0.08);
+    border:1px solid rgba(0,255,170,0.15);
+    color:#a9ffe2;
+}
+
+.tip-item{
+    background:rgba(0,140,255,0.08);
+    border:1px solid rgba(0,140,255,0.15);
+    color:#b7dcff;
+}
+
+.analysis-section{
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:20px;
+    margin-bottom:25px;
+}
+
+.analysis-card{
+    padding:25px;
+    min-height:320px;
+}
+
+.analysis-card h2{
+    margin-bottom:20px;
+}
+
+.analysis-text{
+    color:#b9c9dc;
+    line-height:1.8;
+    font-size:1rem;
+}
+
+.forecast-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+    margin-bottom:25px;
+}
+
+.forecast-card{
+    padding:25px;
+    text-align:center;
+}
+
+.forecast-card h3{
+    color:#9eb0c7;
+    margin-bottom:15px;
+}
+
+.forecast-value{
+    font-size:2rem;
+    font-weight:700;
+}
+
+.goal-section{
+    padding:25px;
+    margin-bottom:25px;
+}
+
+.goal-section h2{
+    margin-bottom:20px;
+}
+
+.goal-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+}
+
+.goal-card{
+    padding:20px;
+    border-radius:20px;
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.06);
+}
+
+.goal-card h4{
+    margin-bottom:10px;
+}
+
+.goal-card p{
+    color:#b9c9dc;
+    line-height:1.6;
+}
+
+.chat-widget{
+    position:fixed;
+    right:25px;
+    bottom:25px;
+    width:320px;
+    padding:20px;
+    z-index:999;
+}
+
+.chat-widget h3{
+    margin-bottom:15px;
+}
+
+.chat-suggestions{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.chat-prompt{
+    padding:12px;
+    border-radius:14px;
+    background:rgba(255,255,255,0.06);
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.chat-input{
+    padding:12px;
+    border-radius:14px;
+    background:rgba(255,255,255,0.06);
+    cursor:pointer;
+    transition:0.3s;
+    width: 100%;
+    color: #a7e7d1;
+}
+.inputsend{
+    padding:12px;
+    border-radius:14px;
+    background:rgba(255,255,255,0.06);
+    cursor:pointer;
+    transition:0.3s;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content:space-between;
+    gap: 20px;
+}
+
+.chat-prompt:hover{
+    background:rgba(0,255,170,0.12);
+    transform:translateY(-2px);
+}
+
+.loading-shimmer{
+    animation:shimmer 1.6s infinite linear;
+    background:linear-gradient(
+        90deg,
+        rgba(255,255,255,0.03),
+        rgba(255,255,255,0.08),
+        rgba(255,255,255,0.03)
+    );
+    background-size:200% 100%;
+}
+
+@keyframes shimmer{
+    0%{background-position:200% 0;}
+    100%{background-position:-200% 0;}
+}
+
+@media(max-width:1100px){
+    .insight-grid,
+    .forecast-grid,
+    .goal-grid{
+        grid-template-columns:1fr;
+    }
+
+    .analysis-section{
+        grid-template-columns:1fr;
+    }
+
+    .hero{
+        flex-direction:column;
+        gap:30px;
+        text-align:center;
+    }
+
+    .chat-widget{
+        position:relative;
+        right:auto;
+        bottom:auto;
+        width:100%;
+        margin-top:20px;
+    }
+}
+
+.chat-send-btn{
+    /* position: absolute;
+    right: 0.5rem;
+    top: 50%; */
+    /* transform: translateY/(-50%); */
+    /* height: 40px;
+    width: 40px; */
+    padding: 3px;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-cyan) 0%, #0891b2 100%);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    background: #70f0cc;
+}
+</style>
+
+<style>
+  .header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    height: 25px;
+    align-items: center;
+    margin-left: 15px;
+}
+
+.user-info span {
+    margin-left: 15px;
+    color: #aaa;
+}
+
+/* NAVBAR */
+.navbar {
+    display: flex;
+    gap: 20px;
+    background: #1a1c2e;
+    padding: 10px 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+.navbar a {
+    color: #aaa;
+    cursor: pointer;
+}
+
+.navbar .active {
+    color: white;
+}
+
+.ai-badge {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    color: white;
+    padding: 10px 10px;
+    border-radius: 50%;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+        }
+.dropdown-arrow {
+    color: #6b7280;
+    font-size: 12px;
+        }
+
+.headercss{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  gap: 10px;
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="ai-page">
+
+     <div class="header">
+    <div class="headercss" onclick="bmodal();">
+        <!-- <span class="ai-badge">SFP</span>        -->
+        <h2>Smart Finance Planner</h2>
+        <span class="dropdown-arrow">▼</span>
+    </div>
+    <div class="user-info">
+        <span id="modal" onclick="bmodal()">Hi  ⭐</span>
+        <span id="modaldate8">____</span>
+    </div>
+    </div>
+
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <a class="active" href="/UI" style="text-decoration: none;color: white;">Dashboard</a>
+        <a href="/budget" style="text-decoration: none;color: white;">Budget</a>
+        <a href="/goalpage" style="text-decoration: none;color: white;">Goals</a>
+        <a href="/report" style="text-decoration: none;color: white;">Reports</a>
+        <a href="/ai_insights" style="text-decoration: none;color: white;">AI Insights</a>
+        
+    </div>
+
+
+    <h1 class="page-title">AI Financial Intelligence</h1>
+
+    <!-- HERO -->
+    <section class="hero glass">
+        <div class="hero-left">
+            <h1 id="ai-summary-title">Analyzing your finances...</h1>
+            <p id="ai-summary-text">
+                AI is studying your spending galaxies and budget constellations...
+            </p>
+            <div class="personality-badge" id="personality-badge">
+                Detecting personality...
+            </div>
+        </div>
+
+        <div class="health-ring-box">
+            <svg width="200" height="200">
+                <circle
+                    cx="100"
+                    cy="100"
+                    r="80"
+                    stroke="rgba(255,255,255,0.08)"
+                    stroke-width="14"
+                    fill="none"
+                />
+                <circle
+                    id="health-ring"
+                    cx="100"
+                    cy="100"
+                    r="80"
+                    stroke="#00ffb7"
+                    stroke-width="14"
+                    fill="none"
+                    stroke-linecap="round"
+                    stroke-dasharray="502"
+                    stroke-dashoffset="502"
+                />
+            </svg>
+
+            <div class="health-score-text">
+                <h2 id="health-score">0</h2>
+                <p>Health Score</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ALERTS -->
+    <section class="insight-grid">
+        <div class="insight-card glass">
+            <h3>Warnings</h3>
+            <div class="insight-list" id="warnings-box"></div>
+        </div>
+
+        <div class="insight-card glass">
+            <h3>Positive Trends</h3>
+            <div class="insight-list" id="positives-box"></div>
+        </div>
+
+        <div class="insight-card glass">
+            <h3>Smart Tips</h3>
+            <div class="insight-list" id="tips-box"></div>
+        </div>
+    </section>
+
+    <!-- ANALYSIS -->
+    <section class="analysis-section">
+        <div class="analysis-card glass">
+            <h2>Spending Intelligence</h2>
+            <p class="analysis-text" id="analysis-text">
+                AI analysis loading...
+            </p>
+        </div>
+
+        <div class="analysis-card glass">
+            <h2>Financial Personality</h2>
+            <p class="analysis-text" id="personality-analysis">
+                Detecting behavior...
+            </p>
+        </div>
+    </section>
+
+    <!-- FORECAST -->
+    <section class="forecast-grid">
+        <div class="forecast-card glass">
+            <h3>Predicted Savings</h3>
+            <div class="forecast-value" id="forecast-savings">₹0</div>
+        </div>
+
+        <div class="forecast-card glass">
+            <h3>Risk Level</h3>
+            <div class="forecast-value" id="forecast-risk">--</div>
+        </div>
+
+        <div class="forecast-card glass">
+            <h3>Suggested Budget</h3>
+            <div class="forecast-value" id="forecast-budget">₹0</div>
+        </div>
+    </section>
+
+    <!-- GOALS -->
+    <section class="goal-section glass">
+        <h2>Goal Intelligence</h2>
+        <div class="goal-grid" id="goal-grid"></div>
+    </section>
+
+     <style>
+.modalunique{
+  width:22rem;
+  border-radius:1.5rem;
+  padding:1.5rem;
+  backdrop-filter:blur(1rem);
+  background:rgba(255,255,255,0.08);
+  box-shadow:0 0 2rem rgba(0,0,0,0.6);
+  color:#fff;
+  position:fixed;
+  display: none;
+  left: calc(50vw - 11rem);
+  top: 50px;
+}
+
+.close-icon{
+  position:absolute;
+  top:1rem;
+  right:1rem;
+  font-size:1.5rem;
+  color:#4ade80;
+  cursor:pointer;
+}
+
+.profile{
+  text-align:center;
+  margin-top:1rem;
+}
+
+.profile img{
+  width:6rem;
+  height:6rem;
+  border-radius:50%;
+  object-fit:cover;
+  border:0.2rem solid rgba(255,255,255,0.2);
+}
+
+.name{
+  margin-top:1rem;
+  font-size:1.4rem;
+  font-weight:600;
+}
+
+.email{
+  font-size:0.9rem;
+  opacity:0.7;
+}
+
+.location{
+  font-size:0.85rem;
+  opacity:0.6;
+  margin-top:0.3rem;
+}
+
+.btn{
+  margin-top:1rem;
+  width:100%;
+  padding:0.6rem;
+  border-radius:0.6rem;
+  background:rgba(255,255,255,0.1);
+  border:0.05rem solid rgba(255,255,255,0.2);
+  color:#fff;
+  cursor:pointer;
+}
+
+.menu{
+  margin-top:1rem;
+}
+
+.menu-item{
+  display:flex;
+  align-items:center;
+  gap:0.8rem;
+  padding:0.7rem 0;
+  font-size:0.95rem;
+  cursor:pointer;
+  opacity:0.85;
+}
+
+.menu-item:hover{
+  opacity:1;
+}
+
+.logout{
+  color:#f87171;
+}
+
+.close-btn{
+  margin-top:1.5rem;
+  width:100%;
+  padding:0.7rem;
+  border:none;
+  border-radius:0.7rem;
+  background:#ea1e3c;
+  color:#fff;
+  font-size:1rem;
+  cursor:pointer;
+}
+        </style>
+        <div class="modalunique">
+            <div class="close-icon" onclick="amodal()">✕</div>
+
+            <div class="profile">
+                <img id="prifile-pic" alt="profile">
+                <div class="name">Angad Sharma</div>
+                <div class="email">angad.sharma@example.com</div>
+                <!-- <div class="location">📍 Pune, Maharashtra</div> -->
+            </div>
+
+            <button type="button" class="btn"></button>
+
+            <div class="menu">
+                <a href="/budget" style="text-decoration: none;color: white;"><div class="menu-item">🎯 My Goals</div></a>
+                <a href="/report" style="text-decoration: none;color: white;"><div class="menu-item">📊 Report</div></a>
+                <a href="/ai_insights" style="text-decoration: none;color: white;"><div class="menu-item">⚙ Ai Insights</div></a>
+                <!-- <div class="menu-item">❓ Help & Support</div>  -->
+                <!-- <div class="menu-item logout"><a href="/LOGOUT" style="text-decoration: none;color:rgb(244, 11, 11);font-size: 50px">↩ Log Out</a></div> -->
+            </div>
+
+            <a href="/LOGOUT"><button type="button" class="close-btn">↩ Log Out</button></a>
+        </div>
+
+</div>
+
+<!-- CHAT WIDGET -->
+<div class="chat-widget glass">
+    <h3>Ask AI</h3>
+
+    <div class="chat-suggestions">
+        <div class="chat-prompt">Can I afford a new phone?</div>
+        <div class="chat-prompt">Where am I overspending?</div>
+        <div class="chat-prompt">How to improve savings?</div>
+        <div class="inputsend">
+            <input type="text" class="chat-input" name="chat-input">
+            <button type="button" class="chat-send-btn" onclick="sendMessage()">
+                <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+            </button>
+        </div>
+        
+    </div>
+</div>
+
+<script>
+function showLoadingSkeleton() {
+    document.querySelector('#warnings-box').innerHTML =
+        `<div class="insight-item warning-item loading-shimmer">Loading...</div>`;
+
+    document.querySelector('#positives-box').innerHTML =
+        `<div class="insight-item positive-item loading-shimmer">Loading...</div>`;
+
+    document.querySelector('#tips-box').innerHTML =
+        `<div class="insight-item tip-item loading-shimmer">Loading...</div>`;
+}
+
+function animateHealthRing(score) {
+    const ring = document.querySelector('#health-ring');
+    const scoreText = document.querySelector('#health-score');
+
+    const radius = 80;
+    const circumference = 2 * Math.PI * radius;
+
+    ring.style.strokeDasharray = circumference;
+
+    let current = 0;
+
+    const interval = setInterval(() => {
+        if (current >= score) {
+            clearInterval(interval);
+            return;
+        }
+
+        current++;
+
+        scoreText.innerText = current;
+
+        const offset = circumference - ((current / 100) * circumference);
+        ring.style.strokeDashoffset = offset;
+
+    }, 20);
+}
+
+function fillList(containerId, items, className) {
+    const box = document.querySelector(containerId);
+    box.innerHTML = '';
+
+    items.forEach(item => {
+        box.innerHTML += `
+            <div class="insight-item ${className}">
+                ${item}
+            </div>
+        `;
+    });
+}
+
+function renderGoals(goals) {
+    const grid = document.querySelector('#goal-grid');
+    grid.innerHTML = '';
+
+    goals.forEach(goal => {
+        grid.innerHTML += `
+            <div class="goal-card">
+                <h4>${goal.name}</h4>
+                <p><strong>Status:</strong> ${goal.status}</p>
+                <p><strong>AI Suggestion:</strong> ${goal.suggestion}</p>
+            </div>
+        `;
+    });
+}
+
+function loadAIInsights() {
+    showLoadingSkeleton();
+
+    fetch('/ai-insights-data/')
+    .catch(()=>{summary_text.innerHTML='AI failed. Retry.'})
+    .then(res => res.json())
+    .then(data => {
+
+        console.log(data);
+
+        document.querySelector('#ai-summary-title').innerText =
+            data.summary_title;
+
+        document.querySelector('#ai-summary-text').innerText =
+            data.summary_text;
+
+        document.querySelector('#personality-badge').innerText =
+            data.personality;
+
+        document.querySelector('#analysis-text').innerText =
+            data.spending_analysis;
+
+        document.querySelector('#personality-analysis').innerText =
+            data.personality_analysis;
+
+        document.querySelector('#forecast-savings').innerText =
+            `₹${Number(data.forecast.month_end_savings).toLocaleString("en-IN")}`;
+
+        document.querySelector('#forecast-risk').innerText =
+            data.forecast.overspending_risk;
+
+        document.querySelector('#forecast-budget').innerText =
+            `₹${Number(data.forecast.suggested_budget).toLocaleString("en-IN")}`;
+
+        fillList('#warnings-box', data.warnings, 'warning-item');
+        fillList('#positives-box', data.positives, 'positive-item');
+        fillList('#tips-box', data.tips, 'tip-item');
+
+        renderGoals(data.goals);
+
+        animateHealthRing(data.health_score);
+    })
+    .catch(error => {
+        console.error(error);
+
+        document.querySelector('#ai-summary-title').innerText =
+            "AI temporarily unavailable";
+
+        document.querySelector('#ai-summary-text').innerText =
+            "Could not fetch AI insights. Try again later.";
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    loadAIInsights();
+});
+</script>
+
+<script>
+    document.querySelectorAll('.chat-prompt').forEach(btn=>{
+        btn.addEventListener('click', async function () {
+            let question = this.innerText;
+            const res = await fetch('/ask-ai/',{
+                method:'POST',
+                headers:{
+                    'Content-Type':'application/json',
+                    'X-CSRFToken':getCookie('csrftoken')
+                },
+                body:JSON.stringify({
+                    question:question
+                })
+            });
+            const data = await res.json();
+            alert(data.answer);
+        });
+    });
+
+    async function sendMessage(){
+        // let input5 = document.querySelector('.chat-input').innerText
+        let question = document.querySelector('.chat-input').value;
+        const res =await fetch('/ask-ai/',{
+                method:'POST',
+                headers:{
+                    'Content-Type':'application/json',
+                    'X-CSRFToken':getCookie('csrftoken')
+                },
+                body:JSON.stringify({
+                    question:question
+                })
+            });
+            document.querySelector('.chat-input').value=''
+
+            const data =await res.json();
+            // document.querySelector('.chat-input').value=''
+
+            alert(data.answer);
+            // document.querySelector('.chat-input').value=''
+    }
+
+    function getCookie(name) {
+    let cookieValue = null;
+
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+
+    return cookieValue;
+}
+
+
+       function amodal(){
+        document.querySelector(".modalunique").style.display="none"
+    }
+
+    function bmodal(){
+        document.querySelector(".modalunique").style.display="block"
+    }
+
+        function UserData(){
+        fetch('/user-data/')
+        .then(res=>res.json())
+        .then(data=>{
+            console.log(data.username,data.email,data.date)
+            document.getElementById('modaldate8').innerHTML=data.date
+            document.getElementById('modal').innerHTML='Hi  '+data.username+' ⭐'
+            document.querySelector('.name').innerHTML=data.username;
+            document.querySelector('.email').innerHTML=data.email
+            document.getElementById('prifile-pic').src="https://api.dicebear.com/9.x/personas/svg?seed="+Math.random()
+        })
+}
+
+UserData()
+</script>
+
+</body>
+</html>

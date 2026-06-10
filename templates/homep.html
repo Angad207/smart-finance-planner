@@ -1,0 +1,103 @@
+{% extends "base.html"%}
+
+{% block title %}HOME{% endblock title %}
+
+<!--Add CSS here for this page-->
+{% block css %}
+<style>
+.main{
+    height:calc(100vh - 56px);
+    background-color: currentcolor;
+    position: fixed;
+    width: 100%;
+}
+
+.chart{
+    position: relative;
+    height: 250px;
+    max-width: 100%;
+    background-color: white;
+}
+
+.view{
+    height: 100%;
+    width: 100%;
+    /* position: fixed; */
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js">
+   
+</script>
+
+
+{% endblock css %}
+
+<!--Add HTML Structure here for this page-->
+{% block body %}
+<div class="main">
+    <div class="chart"><canvas class="view"></canvas></div>
+    <div class="add" style="background-color: aqua; height: 50px; display: flex;">
+        <div class="addex" style="height: 100%;background-color: beige;width: 50%;"></div>
+        <div class="addin" style="height: 100%;background-color: rgb(73, 106, 127);width: 50%;"></div>
+    </div>
+    <div class="addd" style="height: 450px;width: 300px;background: red;position: fixed;left: calc(50vw - 150px);top: calc(50vh - 225px);">
+        <h1 style="text-align: center;">Add Amount</h1>
+
+        <form  method="POST">
+             {% csrf_token %}
+            <div class="amount">
+                <label for="amount" class="form-label">Password</label>
+                <input class="form-control" id="amount" type="number" step="0" placeholder="Enter Amount" aria-label="Amount" name="amount">
+            </div>
+            <div class="col-md-4">
+                <label for="inputState" class="form-label">Select Description</label>
+                <select id="inputState" class="form-select" name="desc">
+                    <option selected>Grosary/Dining</option>
+                    <option>Enterrainment</option>
+                    <option>Travel</option>
+                    <option>Utilities</option>
+                    <option>Others</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Add</button>  
+        </form>     
+    </div>
+</div>
+
+<script>
+    const char = document.querySelector(".view").getContext('2d');
+//    let data = [{x:50, y:7},{x:60, y:8},{x:70, y:8},{x:80, y:9},{x:90, y:10},{x:100, y:15},]
+    let x = [50,29,50,20,79,70]
+    let y = [1,2,3,4,5,6]
+   
+   new Chart(char,{
+    type: "line",
+    data:{
+        labels:y,
+        datasets:[{
+            label:"Expenses",
+            data:x,
+            borderWidth:2,
+            fill:false,
+            tension:0.4
+            // pointRadius: 8,
+            // pointBackgroundColor:"rgb(0,0,225)",
+            // pointBorderColor: "white",  
+            // data: data,
+        }]
+    },
+    options:{
+    //     plugins: {
+    //         legend: {
+    //             display:false
+    //         }
+    //     },
+    //     scales:{x:[{ticks:{min:40, max:200}}],
+    // y:[{ticks:{min:2, max:16}}],},
+    responsive: true,
+    maintainAspectRatio:false
+    }
+   });
+</script>
+{% endblock body %}
