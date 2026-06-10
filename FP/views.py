@@ -248,15 +248,18 @@ def budget(request):
 
 def signup(request):
     if request.method == "POST":
-        username = request.POST.get('username')
-        emailadderess = request.POST.get('emailadderess')
-        createpassword = request.POST.get('createpassword')
-        phonenumber = request.POST.get('phonenumber')
+        try:
+            username = request.POST.get('username')
+            emailadderess = request.POST.get('emailadderess')
+            createpassword = request.POST.get('createpassword')
+            phonenumber = request.POST.get('phonenumber')
 
-        user = User.objects.create_user(username=username, email=emailadderess, password=createpassword)
-        Profile.objects.create(user=user, phone=phonenumber)
+            user = User.objects.create_user(username=username, email=emailadderess, password=createpassword)
+            Profile.objects.create(user=user, phone=phonenumber)
 
-        return redirect(loginpage)
+            return redirect(loginpage)
+        except Exception as e:
+            return  HttpResponse(f"<h1>Error</h1><pre>{traceback.format_exc()}</pre>")
 
     return render(request, 'signup.html')
 
