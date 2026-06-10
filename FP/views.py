@@ -11,15 +11,12 @@ from zoneinfo import ZoneInfo
 import os
 from dotenv import load_dotenv
 load_dotenv()
-from django.db.models import Sum
 import re
 import ollama
-import requests
 import random
 import json
 
 from django.core.mail import send_mail
-from keras.src.ops import append
 
 # from prometheus_client import values
 
