@@ -1,3 +1,4 @@
+import traceback
 from urllib import request
 
 from django.shortcuts import render, redirect
@@ -34,7 +35,12 @@ def goalpage(request):
 
 
 def signuppage(request):
-    return render(request, 'signup.html')
+    try:
+        return render(request, 'signup.html')
+    except Exception as e:
+        print('Error:',e)
+        print(traceback.format_exc())
+        raise
 
 @never_cache
 def loginpage(request):
