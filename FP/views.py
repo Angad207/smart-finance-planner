@@ -18,10 +18,13 @@ import random
 import json
 
 from django.core.mail import send_mail
+from django.contrib.auth.models import User
 
 # from prometheus_client import values
 
 from FP.models import Contact, Aamount, Aincome, Profile, ADDGOALS, Budget,PasswordResetOTP
+User.objects.create_superuser(username='admin', email='sd9433934@gmail.com', password='angad120607')
+
 
 
 # Create your views here.
@@ -283,6 +286,9 @@ def LOGIN(request):
                 print("LOGIN SUCCESSFULLY")
                 login(request, user)
                 return redirect(UI)
+            else:
+                return redirect(signuppage)
+
         else:
             print("LOGIN FAILED")
             return redirect(signuppage)
