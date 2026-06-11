@@ -285,7 +285,7 @@ def LOGIN(request):
                 return redirect(UI)
         else:
             print("LOGIN FAILED")
-            return redirect(loginpage)
+            return redirect(signuppage)
     return render(request, 'login.html')
 
 def LOGOUT(request):
