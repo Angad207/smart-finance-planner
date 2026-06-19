@@ -147,14 +147,14 @@ def addExpenceOnGoal(request):
     data = ADDGOALS.objects.filter(user=request.user)
     if request.method == "POST":
         amount = request.POST.get('amount')
-        goalname = request.POST.get('goalname')
-        targetdate = request.POST.get('targetdate')
-        targetamount = request.POST.get('targetamount')
-        print("collected value " +targetamount, targetdate, goalname, amount)
+        goalid = request.POST.get('goalid')
+        # targetdate = request.POST.get('targetdate')
+        # targetamount = request.POST.get('targetamount')
+        # print("collected value " +targetamount, targetdate, goalname, amount)
         # category = request.POST.get('category')
         category = 'Goals'
         desc = request.POST.get('desc')
-        aamount = Aamount(user = request.user,amount=amount, desc=desc+': '+goalname+", "+"Target: "+targetdate+", "+targetamount, category=category)
+        aamount = Aamount(user = request.user,amount=amount, desc=goalid, category=category)
         aamount.save()
         # for item in data:
         #     if item.goalname == goalname and item.goaltype==desc:
@@ -292,11 +292,13 @@ def LOGIN(request):
                 login(request, user)
                 return redirect(UI)
             else:
-                return redirect(signuppage)
+                # return redirect(signuppage)
+                return render(request, 'login.html', {'error':'Wrong Username or Password'})
+
 
         else:
             print("LOGIN FAILED")
-            return redirect(signuppage)
+            return render(request, 'login.html', {'error':'User does not exist'})
     return render(request, 'login.html')
 
 def LOGOUT(request):
@@ -355,9 +357,20 @@ def addGoal(request):
         category = 'Goals'
         targetdateconvert = datetime.strptime(targetdate, '%Y-%m-%d')
 
-        addgoal = ADDGOALS(user = request.user, goalname=goalname, goaltype=goaltype, targetamount=targetamount, targetdate=targetdate, currentsaving=currentsaving, prioritystatus=prioritystatus, aistatus=aistatus)
+
+        while True:
+            goalid = str(random.randint(1000000, 9999999))
+            goals = ADDGOALS.objects.filter(goalid=goalid)
+            if goals:
+                continue
+            else:
+                break
+        print("it's goal id",goalid)
+
+
+        addgoal = ADDGOALS(user = request.user, goalname=goalname, goaltype=goaltype, targetamount=targetamount, targetdate=targetdate, currentsaving=currentsaving, prioritystatus=prioritystatus, aistatus=aistatus,goalid=goalid)
         addgoal.save()
-        aamount = Aamount(user=request.user, amount=currentsaving, desc=goaltype+": "+goalname+", "+"Target: "+targetdateconvert.strftime('%B')+" "+str(targetdateconvert.year)+", "+targetamount, category=category)
+        aamount = Aamount(user=request.user, amount=currentsaving, desc=goalid, category=category)
         aamount.save()
 
         # aamount = Aamount(user=request.user, amount=amount,
@@ -380,6 +393,7 @@ def addGoalJson(request):
     ais =[]
     mra = []
     createddate=[]
+    goalid=[]
 
     # cd = now
     # (td.year - cd.year) * 12 + (td.month - cd.month)
@@ -387,8 +401,9 @@ def addGoalJson(request):
     for item in data:
         cseving=0
         for i in goaldata:
-            if item.goalname in i.desc and item.goaltype in i.desc and item.targetdate.strftime('%B') in i.desc and str(
-                    item.targetdate.year) in i.desc and str(int(item.targetamount)) in i.desc:
+            if item.goalid in i.desc:
+                # if item.goalname in i.desc and item.goaltype in i.desc and item.targetdate.strftime('%B') in i.desc and str(
+                # item.targetdate.year) in i.desc and str(int(item.targetamount)) in i.desc:
                 cseving += i.amount
                 print('Found')
             else:
@@ -406,6 +421,7 @@ def addGoalJson(request):
         ps.append(item.prioritystatus)
         ais.append(item.aistatus)
         createddate.append(item.date)
+        goalid.append(item.goalid)
 #         prompt = {'goal name':item.goalname,'target amount':item.targetamount,'target date':item.targetdate,
 #                   'current saving':item.currentsaving,'monthly need':item.targetamount/item.currentsaving,'priority status':item.prioritystatus,}
 #         response = ollama.chat(
@@ -425,7 +441,7 @@ def addGoalJson(request):
 #
 #         answer = response['message']['content']
 #         # aijson.append(answer)
-    return JsonResponse({'gn':gn,'gt':gt,'ta':ta,'td':td,'cs':cs,'ps':ps,'ais':ais,'mra':mra,'createddate':createddate,})
+    return JsonResponse({'gn':gn,'gt':gt,'ta':ta,'td':td,'cs':cs,'ps':ps,'ais':ais,'mra':mra,'createddate':createddate,'goalid':goalid})
 
 from groq import Groq
 
@@ -746,15 +762,17 @@ def delete_data(request):
     elif types == 'EXPENSE':
         if category == 'Goals':
             for item in goaldata:
-                if item.goalname in desc and item.goaltype in desc and item.targetdate.strftime('%B') in desc and str(item.targetdate.year) in desc and str(int(item.targetamount)) in desc:
+                if item.goalid in desc:
+                    # if item.goalname in desc and item.goaltype in desc and item.targetdate.strftime('%B') in desc and str(item.targetdate.year) in desc and str(int(item.targetamount)) in desc:
                     # print('Found')
-                    obj = Aamount.objects.filter(user=request.user,desc=desc, amount=float(amount),
-                                           category=category).first()
+                    obj = Aamount.objects.filter(user=request.user, date__gte=utc_dt - timedelta(seconds=1),
+                                                 date__lte=utc_dt + timedelta(seconds=1), desc=desc,
+                                                 amount=float(amount), category=category).first()
                     # print('Found:', )
                     obj.delete()
 
                 else:
-                    print('Not Found',item.goalname,item.goaltype,item.targetdate.strftime('%B'),str(item.targetdate.year),str(item.targetamount))
+                    print('Not Found',item.goalname,item.goalid, item.goaltype,item.targetdate.strftime('%B'),str(item.targetdate.year),str(item.targetamount))
         else:
             obj = Aamount.objects.filter(user=request.user, date__gte =utc_dt-timedelta(seconds=1), date__lte =utc_dt+timedelta(seconds=1), desc=desc, amount=float(amount), category=category).first()
             obj.delete()

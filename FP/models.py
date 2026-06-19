@@ -63,6 +63,7 @@ class ADDGOALS(models.Model):
     prioritystatus = models.CharField(max_length=11, default='off', blank=True)
     aistatus = models.CharField(max_length=11, default='off')
     date = models.DateTimeField(default=timezone.now)
+    goalid = models.CharField(max_length=7)
 
     def __str__(self):
         return self.goalname

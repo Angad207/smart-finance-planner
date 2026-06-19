@@ -1754,14 +1754,6 @@
             position: relative;
         }
 
-        .progress-bar-fill {
-            height: 100%;
-            width: 50%;
-            background: linear-gradient(90deg, var(--accent-green) 0%, var(--success) 100%);
-            border-radius: 0.25rem;
-            box-shadow: 0 0 0.5rem var(--accent-green-glow);
-            transition: width 0.6s ease;
-        }
 
         .priority-detail {
             font-size: 0.6875rem;
@@ -1966,7 +1958,7 @@
             white-space: nowrap;
         }
 
-        .btn-ai {
+        /*  .btn-ai {
             background: linear-gradient(135deg, var(--accent-green) 0%, var(--accent-green-dark) 100%);
             color: var(--text-primary);
             box-shadow: 0 0.25rem 0.75rem var(--accent-green-glow);
@@ -1974,8 +1966,8 @@
 
         .btn-ai:hover {
             transform: translateY(-0.0625rem);
-            box-shadow: 0 0.375rem 1rem rgba(16, 185, 129, 0.4);
-        }
+            box-shadow: 0 0.375rem 1rem rgba(16, 185, 129, 0.4); 
+        } */
 
         .btn-secondary {
             background: rgba(255, 255, 255, 0.06);
@@ -2046,6 +2038,9 @@
         }
         .ai{
             background: linear-gradient(145deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.7) 100%);
+        }
+        .goalidcss{
+            color: rgba(150, 150, 150, 0.45);
         }
 
         
@@ -2644,9 +2639,9 @@
                     <span class="tribute-sigil">₹</span>
                     <input type="number" class="tribute-offering" value="" name="amount" required placeholder="0">
                     <input type="hidden" class="tribute-offering-desc" style="display: none;" name="desc" value="">
-                    <input type="hidden" class="tribute-offering-goalname" style="display: none;" name="goalname" value="">
-                    <input type="hidden" class="tribute-offering-targetdate" style="display: none;" name="targetdate" value="">
-                    <input type="hidden" class="tribute-offering-targetamount" style="display: none;" name="targetamount" value="">
+                    <input type="hidden" class="tribute-offering-goalid" style="display: none;" name="goalid" value="">
+                    <!-- <input type="hidden" class="tribute-offering-targetdate" style="display: none;" name="targetdate" value=""> -->
+                    <!-- <input type="hidden" class="tribute-offering-targetamount" style="display: none;" name="targetamount" value=""> -->
 
                 </div>
 
@@ -2859,23 +2854,6 @@ UserData()
                 }, 100);
             }
         });
-
-        // Button interactions
-        document.querySelector('.btn-ai').addEventListener('click', function() {
-            this.textContent = 'Thinking...';
-            setTimeout(() => {
-                this.textContent = 'Ask AI Coach';
-            }, 2000);
-        });
-
-        // Animate progress bar on load
-        window.addEventListener('load', function() {
-            const progressBar = document.querySelector('.progress-bar-fill');
-            progressBar.style.width = '0%';
-            setTimeout(() => {
-                progressBar.style.width = '50%';
-            }, 300);
-        });
     </script>
 
     <script>
@@ -2983,10 +2961,12 @@ UserData()
                 let ta = data.ta
                 let td = data.td
                 let cs = data.cs
+                console.log(cs)
                 let ps = data.ps
                 let ais = data.ais
                 let mra = data.mra
                 let createddate = data.createddate
+                let goalid = data.goalid
                 // let aijson = data.aijson
                 // console.log(aijson)
                 // console.log(data.gn,data.cs)
@@ -3002,7 +2982,9 @@ UserData()
                         
                         const newsame = document.createElement("div");
                         newsame.classList.add("goal-card");
-                        newsame.innerHTML =`<div class="goal-title goal-title${[i]}">${gt[i]} :- ${gn[i]}</div>
+                        newsame.innerHTML =`
+                        <h6 class='goalidcss'>Goal Id: ${goalid[i]}</h6>
+                        <div class="goal-title goal-title${[i]}">${gt[i]} :- ${gn[i]}</div>
                             <div class="goal-amount goal-amount${[i]}">
                                 <span class="current current${[i]}">₹${cs[i].toLocaleString("en-IN")}</span > / <span class='tamount'>₹${ta[i].toLocaleString("en-IN")}</span>
                             </div>
@@ -3037,11 +3019,11 @@ UserData()
                             document.querySelector('.pulse-essence').style.width=`${per*100}%`;
                             document.querySelector('.tribute-offering-desc').value=gt[i]
                             console.log('1',td[i], ta[i])
-                            document.querySelector('.tribute-offering-goalname').value=gn[i]
+                            document.querySelector('.tribute-offering-goalid').value=goalid[i]
                             console.log('2',td[i], ta[i])
                             console.log('move')
-                            document.querySelector('.tribute-offering-targetdate').value=td[i]
-                            document.querySelector('.tribute-offering-targetamount').value=ta[i]
+                            // document.querySelector('.tribute-offering-targetdate').value=td[i]
+                            // document.querySelector('.tribute-offering-targetamount').value=ta[i]
                             console.log('3',td[i], ta[i])
 
                         // let ava = document.querySelector('.tribute-offering-desc').value=gt[i]
@@ -3052,7 +3034,9 @@ UserData()
                         let per = ta[i]? cs[i]/ta[i]:0;
                         const newsame = document.createElement("div");
                         newsame.classList.add("goal-card-with-chart");
-                        newsame.innerHTML =`<div class="chart-header">
+                        newsame.innerHTML =`
+                        <h6 class='goalidcss'>Goal Id: ${goalid[i]}</h6>
+                        <div class="chart-header">
                             <div>
                                 <div class="goal-title">${gt[i]} :- ${gn[i]}</div>
                                 <div class="goal-amount">
@@ -3094,9 +3078,9 @@ UserData()
                             document.querySelector('.slate-trace').innerHTML=`Current Progress: ₹${cs[i].toLocaleString("en-IN")} / ₹${ta[i].toLocaleString("en-IN")} (${per*100}%)`;
                             document.querySelector('.pulse-essence').style.width=`${per*100}%`;
                             document.querySelector('.tribute-offering-desc').value=gt[i]
-                            document.querySelector('.tribute-offering-goalname').value=gn[i]
-                            document.querySelector('.tribute-offering-targetdate').value=td[i]
-                            document.querySelector('.tribute-offering-targetamount').value=ta[i]
+                            document.querySelector('.tribute-offering-goalid').value=goalid[i]
+                            // document.querySelector('.tribute-offering-targetdate').value=td[i]
+                            // document.querySelector('.tribute-offering-targetamount').value=ta[i]
                             console.log('3',td[i], ta[i])
                         // let ava = document.querySelector('.tribute-offering-desc').value=gt[i]
                         // console.log(ava)
