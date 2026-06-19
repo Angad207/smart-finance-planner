@@ -254,16 +254,22 @@ def signup(request):
             username = request.POST.get('username')
             emailadderess = request.POST.get('emailadderess')
             createpassword = request.POST.get('createpassword')
+            confirmpassword = request.POST.get('confirmpassword')
             phonenumber = request.POST.get('phonenumber')
-
-            user = User.objects.create_user(username=username, email=emailadderess, password=createpassword)
-            Profile.objects.create(user=user, phone=phonenumber)
-
-            return redirect(loginpage)
+            user = User.objects.filter(email=emailadderess).first()
+            if user:
+                return render(request, 'signup.html',{'error':'User already exists'})
+            elif createpassword != confirmpassword:
+                return render(request, 'signup.html',{'error':'Passwords do not match'})
+            else:
+                user = User.objects.create_user(username=username, email=emailadderess, password=createpassword)
+                Profile.objects.create(user=user, phone=phonenumber)
+                return redirect(loginpage)
         except Exception as e:
             return  HttpResponse(f"<h1>Error</h1><pre>{traceback.format_exc()}</pre>")
-
     return render(request, 'signup.html')
+
+    # return render(request, 'signup.html')
 
 def LOGIN(request):
     if request.method == "POST":

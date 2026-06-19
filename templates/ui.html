@@ -446,38 +446,21 @@ body {
             </div>
 
             <div class="box2">
-                <h3>Income vs Expenses</h3>
+                <!-- <h3>Income vs Expenses</h3> -->
+                <h2 style="text-align: center;" class="incomeexpensetype">Income vs Expenses</h2>
                 <canvas id="chart"></canvas>
             </div>
 
         </div>
 
         <!-- RIGHT SIDE -->
+        
         <div class="right">
-
-            <div class="box">
-                <h3>Emergency Fund</h3>
-                <p>₹3,25,000 / ₹5,00,000</p>
-                <p class="red">65% - On track</p>
-            </div>
-
-            <div class="box">
-                <h3>Home Downpayment</h3>
-                <p>₹12,40,000 / ₹25,00,000</p>
-                <p class="green-text">50% - Great progress!</p>
-            </div>
-
-            <div class="box">
-                <h3>Retirement</h3>
-                <p>₹18,50,000 / ₹60,00,000</p>
-            </div>
-
-            <div class="box">
-                <h3>AI Insight</h3>
-                <p>You’re on track to hit your goal early 🚀</p>
-            </div>
+            <h2 style="text-align: center;" class="incomeexpensetype">This Month's Expenses</h2>
 
         </div>
+        
+
 
     </div>
 
@@ -1464,7 +1447,7 @@ body {
                     <div class="header-title">
                         <h1>All Transactions</h1>
                         <div class="month-picker-wrapper">
-                            <!-- <select id="monthPicker" class="month-picker">
+                            <!-- <select id="monthPicker" class="month-picker">+
                                 <option value="2026-04"></option>
                                 <option value="2026-03">March 2026</option>
                                 <option value="2026-02">February 2026</option>
@@ -2715,6 +2698,7 @@ function creategoal(){
                 // console.log(data.gn,data.cs)
                 const newadd = document.querySelector(".right");
                 newadd.innerHTML="";
+                newadd.innerHTML=`<h2 style="text-align: center;" class="incomeexpensetype">Goals</h2>`
                 // const newadd2 = document.querySelector(".bottom-row");
                 // newadd2.innerHTML="";
                 // const newsame = document.createElement("div");
